@@ -1,0 +1,68 @@
+#board {
+    background-image: url(wood_background.png);
+    border: 5px solid darkblue;
+    border-radius: 8px;
+}
+
+.player-name {
+    font-size: 20px;
+}
+
+.player-box {
+    stroke: grey;
+    stroke-width: 2px;
+    fill: white;
+    fill-opacity: 0.5;
+}
+
+.step {
+    stroke: black;
+    stroke-width: 3px;
+    fill-opacity: 0;
+}
+
+.step:hover {
+    stroke-width: 6px;
+    cursor: pointer;
+}
+
+.occupied-red{
+    stroke: black;
+    fill:red;
+}
+
+.occupied-blue {
+    stroke: black;
+    fill:blue;
+}
+
+.occupied-green {
+    stroke: black;
+    fill: green;
+}
+
+.occupied-yellow {
+    stroke: black;
+    fill: yellow; 
+}
+
+.out {
+    fill: none;
+    stroke-width: 4px;
+}
+
+.out-red {
+    stroke: red;
+}
+
+.out-blue {
+    stroke: blue;
+}
+
+.out-green {
+    stroke: green;
+}
+
+.out-yellow {
+    stroke: yellow;
+}

@@ -1,0 +1,49 @@
+.controls-box {
+    overflow: auto;
+}
+
+.instruction-box {
+    margin: 10px 30px;
+}
+
+.instruction-text {
+    margin: 0px;
+}
+
+.hand {
+    margin: 20px;
+    height: 300px;
+}
+
+.card {
+    position: relative;
+    top: 30px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin-right: -35px;
+    width: 90px;
+    height: 150px;
+    border-radius: 10px;
+    background: blanchedalmond;
+    border: 3px solid black;
+}
+
+.card:hover {
+    top: 20px;
+    z-index: 100;
+}
+
+.card-value {
+    font-size: 30px;
+    margin: 15px;
+}
+
+.card-number {
+    font-size: 40px;
+}
+
+.card-path {
+    stroke: black;
+    stroke-width: 3px;
+    fill: darkred;
+}
