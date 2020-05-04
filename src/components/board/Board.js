@@ -23,6 +23,10 @@ function Board(props) {
     console.log(d)
   }
 
+  var playerBoxClicked = function (d) {
+    console.log("player box " + d + " clicked!")
+  }
+
   return (
     <div className="svg-container">
       <svg id="board" className="svg-content-responsive" viewBox={"0 0 " + width + " " + height}>
@@ -30,28 +34,44 @@ function Board(props) {
         {/* add players */}
         <svg x="0%" y="0%" height="20%" width="20%">
           <g transform={"rotate(-45 " + 0.2*0.95*width + " " + (0.25*0.2*height) + ")"}>
-           <rect className="player-box" x="5%" y="5%" width="90%" height="20%" style={{stroke:"blue"}} />
+           <rect 
+              className="player-box" x="5%" y="5%" 
+              width="90%" height="20%" style={{stroke:"blue"}} 
+              onClick={ () => playerBoxClicked(1) }
+          />
            <text className="player-name" x="10%" y="20%" >{playerList[0].name}</text>
           </g>
         </svg>
 
         <svg x="80%" y="0%" height="20%" width="20%">
           <g transform={"rotate(45 " + 0.2*0.05*width + " " + 0.25*0.2*height + ")"}>
-            <rect className="player-box" x="5%" y="5%" width="90%" height="20%" style={{stroke:"red"}} />
+            <rect 
+                className="player-box" x="5%" y="5%" 
+                width="90%" height="20%" style={{stroke:"red"}}
+                onClick={ () => playerBoxClicked(3) } 
+            />
             <text  x="10%" y="20%" className="player-name">{playerList[3].name}</text>
           </g>
         </svg>
 
         <svg x="80%" y="80%" height="20%" width="20%">
           <g transform={"rotate(-45 " + 0.2*0.05*width + " " + 0.2*0.75*height + ")"}>
-            <rect className="player-box" x="5%" y="75%" width="90%" height="20%" style={{stroke:"yellow"}}/>
+            <rect 
+                className="player-box" x="5%" y="75%" 
+                width="90%" height="20%" style={{stroke:"yellow"}}
+                onClick={ () => playerBoxClicked(2) }
+            />
             <text  x="10%" y="90%" className="player-name">{playerList[2].name}</text>
           </g>
         </svg>
 
         <svg x="0%" y="80%" height="20%" width="20%">
           <g transform={"rotate(45 " + 0.2*0.95*width + " " + 0.2*0.75*height + ")"}>
-            <rect className="player-box" x="5%" y="75%" width="90%" height="20%" style={{stroke:"green"}}/>
+            <rect 
+                className="player-box" x="5%" y="75%" 
+                width="90%" height="20%" style={{stroke:"green"}}
+                onClick={ () => playerBoxClicked(2) }
+            />
             <text  x="10%" y="90%" className="player-name">{playerList[1].name}</text>
           </g>
         </svg>

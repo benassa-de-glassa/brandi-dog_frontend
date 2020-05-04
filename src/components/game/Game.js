@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import Chat from '../chat/Chat'
 import Board from '../board/Board'
 import Controls from '../controls/Controls'
-import './game.css'
 
 
 class Game extends Component {

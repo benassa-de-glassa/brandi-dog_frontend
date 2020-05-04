@@ -10,6 +10,18 @@
     border-bottom: 5px solid darkblue ;
 }
 
+.top-bar-link {
+    display: inline-block;
+    font-size: large;
+    font-weight: 700;
+    font-family: inherit;
+    color: inherit;
+    background: inherit;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
 .mr-auto {
     margin-right: auto;
 }
@@ -65,8 +77,8 @@
     margin: 0;
     margin-left: .5%;
     background: whitesmoke;
-    border: 4px solid darkblue;
-    border-radius: 5px;
+    border: 4px solid slategrey;
+    /* border-radius: 5px; */
 }
 
 .component-title {
