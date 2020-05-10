@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 
-import { API_URL, postData } from '../../paths'
-
 class UserRegistration extends Component {
     constructor(props) {
         super(props)
