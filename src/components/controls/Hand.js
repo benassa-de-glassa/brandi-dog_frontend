@@ -3,8 +3,14 @@ import React from 'react'
 function Hand(props) {
   return (
     <div className="hand">
-      {props.cards.map( card => 
-        <div key={card.uid} className="card" onClick={ () => props.cardClicked(card) }><h3 className="card-value">{card.value}</h3></div>
+      {props.cards.map( (card, index) => 
+        <div 
+          key={card.uid} 
+          className={ (index === props.selectedCardIndex) ? "card card-selected" : "card" }
+          onClick={ () => props.cardClicked(index) }
+        >
+          <h3 className="card-value">{card.value}</h3>
+        </div>
       )}
     </div>
     )

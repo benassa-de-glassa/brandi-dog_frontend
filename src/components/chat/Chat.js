@@ -8,19 +8,19 @@ class Chat extends Component {
     this.state = {
       textValue: "",
       messages: [
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now', text: 'Welcome to Boomer Dog'},
-        {sender: 'bene', time: 'later', text: 'geh mal bier holn'},
-        {sender: 'bene', time: 'later', text: 'geh mal bier holn'},
-        {sender: 'bene', time: 'later', text: 'geh mal bier holn'}
+        {sender: 'server', time: 'now1', text: 'Welcome to Boomer Dog'},
+        {sender: 'server', time: 'now2', text: 'Welcome to Boomer Dog'},
+        {sender: 'server', time: 'now3', text: 'Welcome to Boomer Dog'},
+        {sender: 'server', time: 'now4', text: 'Welcome to Boomer Dog'},
+        {sender: 'server', time: 'now5', text: 'Welcome to Boomer Dog'},
+        {sender: 'server', time: 'now6', text: 'Welcome to Boomer Dog'},
+        {sender: 'server', time: 'now7', text: 'Welcome to Boomer Dog'},
+        {sender: 'server', time: 'now8', text: 'Welcome to Boomer Dog'},
+        {sender: 'server', time: 'now9', text: 'Welcome to Boomer Dog'},
+        {sender: 'server', time: 'now10', text: 'Welcome to Boomer Dog'},
+        {sender: 'bene', time: 'later1', text: 'geh mal bier holn'},
+        {sender: 'bene', time: 'later2', text: 'geh mal bier holn'},
+        {sender: 'bene', time: 'later3', text: 'geh mal bier holn'}
       ],
     }
     this.handleChange = this.handleChange.bind(this)
@@ -43,7 +43,7 @@ class Chat extends Component {
   }
 
   componentDidUpdate() {
-    console.log("message added")
+    console.log("chat updated")
     var objDiv = document.getElementById("message-box");
     objDiv.scrollTop = objDiv.scrollHeight;
   }

@@ -27,6 +27,10 @@
     cursor: pointer;
 }
 
+.occupied {
+    fill-opacity: 1;
+}
+
 .occupied-red{
     stroke: black;
     fill:red;
@@ -66,4 +70,17 @@
 
 .out-yellow {
     stroke: yellow;
+}
+
+.card-blue {
+    fill: skyblue
+}
+
+.card-number {
+    font-size: 40px;
+}
+
+.card-path {
+    stroke: black;
+    stroke-width: 3px;
 }

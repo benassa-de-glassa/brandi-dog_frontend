@@ -17,13 +17,23 @@ class Game extends Component {
                 { uid: 4, value: 5, color: "hearts" },
                 { uid: 5, value: "K", color: "hearts" }
             ],
+            selectedCardIndex: null,
         }
 
         this.cardClicked = this.cardClicked.bind(this)
     }
 
-    cardClicked(card) {
-        console.log(card.value + " clicked")
+    cardClicked(index) {
+        console.log(this.state.cards[index].value + " clicked")
+        this.setState({selectedCardIndex: index})
+
+        // TODO: Request valid moves from server and display them on the board
+    }
+
+    stepClicked(index) {
+        console.log("step" + index + "clicked")
+
+        // TODO: Request possible cards that can be played and mark them
     }
 
     render() {
@@ -31,7 +41,11 @@ class Game extends Component {
             <div className="game-container">
                 <Board />
                 <div className="right-container">
-                    <Controls cards={this.state.cards} cardClicked={this.cardClicked}/>
+                    <Controls 
+                            cards={this.state.cards} 
+                            cardClicked={this.cardClicked}
+                            selectedCardIndex={this.state.selectedCardIndex}
+                    />
                     <Chat />
                 </div>
 

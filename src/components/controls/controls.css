@@ -28,6 +28,12 @@
     border: 3px solid black;
 }
 
+.card-selected {
+    top: 20px;
+    border: 3px solid grey;
+    z-index: 99;
+}
+
 .card:hover {
     top: 20px;
     z-index: 100;
@@ -36,14 +42,4 @@
 .card-value {
     font-size: 30px;
     margin: 15px;
-}
-
-.card-number {
-    font-size: 40px;
-}
-
-.card-path {
-    stroke: black;
-    stroke-width: 3px;
-    fill: darkred;
 }

@@ -2,22 +2,25 @@ import React from 'react'
 
 import './board.css'
 
-var boardData = require("./boarddata.json")
+const boardData = require("./boarddata.json")
 
 function Board(props) {
-  var height = 800;
-  var width = 800;
+  const height = 800;
+  const width = 800;
 
   // playerList = props.playerList
   var playerList = [{name: "Player 1"}, {name: "Player 2"}, {name: "Player 3"}, {name: "Player 4"}] 
-  var top3cards = [
-    {color: "blue", number: 3},
-    {color: "blue", number: 4},
-    {color: "red", number: 7}
-  ]
+  var topCard = {color: "blue", number: 3}
 
-  var radius = 12;
-  var outerRadius = 18;
+  var stepOccupation = new Array(64);
+  stepOccupation[0] = "red"
+  stepOccupation[4] = "red"
+  stepOccupation[20] = "red"
+  stepOccupation[33] = "blue"
+  stepOccupation[60] = "yellow"
+
+  const radius = 12;
+  const outerRadius = 18;
 
   var onClickHandler = function (d) {
     console.log(d)
@@ -80,7 +83,10 @@ function Board(props) {
           data =>
             <circle 
               key={data.id}
-              className="step"
+              className={stepOccupation[data.id] 
+                          ? "step occupied occupied-" + stepOccupation[data.id]
+                          : "step"
+              }
               id={"step-" + data.id} 
               cx={data.x}
               cy={data.y}
@@ -93,7 +99,7 @@ function Board(props) {
           data =>
             <circle 
               key={"out " + data.x + " " + data.y}
-              className={"step out out-" + data.color}
+              className={"out out-" + data.color}
               id={"step-" + data.id} 
               cx={data.x}
               cy={data.y}
@@ -131,9 +137,9 @@ function Board(props) {
         -10,10 h-90 a10,10 0 0 1 -10,-10 v-150 a10,10 0 0 1 10,-10 z" /> 
         <text className="card-number" x="310" y="365">7</text> */}
         
-        <path className="card-path"  d="M355,315 h90 a10,10 0 0 1 10,10 v150 a10,10 0 0 1 
+        <path className={"card-path card-" + topCard.color}  d="M355,315 h90 a10,10 0 0 1 10,10 v150 a10,10 0 0 1 
         -10,10 h-90 a10,10 0 0 1 -10,-10 v-150 a10,10 0 0 1 10,-10 z" /> 
-        <text className="card-number" x="360" y="365">7</text>
+        <text className="card-number" x="360" y="365">{topCard.number}</text>
 
         {/* <path className="card-path" d="M405,315 h90 a10,10 0 0 1 10,10 v150 a10,10 0 0 1 
         -10,10 h-90 a10,10 0 0 1 -10,-10 v-150 a10,10 0 0 1 10,-10 z" /> 

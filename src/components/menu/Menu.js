@@ -8,7 +8,18 @@ class Menu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            games: [0, 1, 2, 3]
+            games: [
+                {
+                    id: 0,
+                    name: 'Coole Runde',
+                    players: ['Lara', 'Bene', 'Thilo']
+                },
+                {
+                    id: 1,
+                    name: 'Uncoole Runde',
+                    players: ['Fritz', 'Fratz', 'Frutz']
+                }
+            ]
         }
     }
 
