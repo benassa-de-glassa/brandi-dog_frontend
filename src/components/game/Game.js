@@ -6,8 +6,8 @@ import Controls from '../controls/Controls'
 
 
 class Game extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             cards: [
                 { uid: 0, value: 1, color: "hearts" },
@@ -46,7 +46,7 @@ class Game extends Component {
                             cardClicked={this.cardClicked}
                             selectedCardIndex={this.state.selectedCardIndex}
                     />
-                    <Chat />
+                    <Chat player={this.props.player}/>
                 </div>
 
             </div>

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 
 import './chat.css'
+import { socket } from '../../socket'
 
 class Chat extends Component {
   constructor(props) {
@@ -8,37 +9,31 @@ class Chat extends Component {
     this.state = {
       textValue: "",
       messages: [
-        {sender: 'server', time: 'now1', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now2', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now3', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now4', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now5', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now6', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now7', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now8', text: 'Welcome to Boomer Dog'},
-        {sender: 'server', time: 'now9', text: 'Welcome to Boomer Dog'},
         {sender: 'server', time: 'now10', text: 'Welcome to Boomer Dog'},
-        {sender: 'bene', time: 'later1', text: 'geh mal bier holn'},
-        {sender: 'bene', time: 'later2', text: 'geh mal bier holn'},
         {sender: 'bene', time: 'later3', text: 'geh mal bier holn'}
       ],
     }
     this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleClick = this.handleClick.bind(this)
     this.onEnterKey = this.onEnterKey.bind(this)
+    this.addMessage = this.addMessage.bind(this)
   }
 
   handleChange(event) {
     this.setState({textValue: event.target.value});  
   }
 
-  handleSubmit(event) {
+  handleClick() {
+    socket.emit('chat_message', {
+      sender: this.props.player.name,
+      text: this.state.textValue
+    })
     this.setState({textValue: ''})
   }
 
   onEnterKey(event) {
     if (event.key === 'Enter' && event.shiftKey === false ) {
-      this.handleSubmit()
+      this.handleClick()
     }
   }
 
@@ -46,6 +41,21 @@ class Chat extends Component {
     console.log("chat updated")
     var objDiv = document.getElementById("message-box");
     objDiv.scrollTop = objDiv.scrollHeight;
+  }
+
+  componentDidMount() {
+    console.log('chat moutned')
+    socket.on('chat_message', data => {
+      console.log('received')
+      this.addMessage(data)
+    })
+  }
+
+  addMessage(data) {
+    this.setState( prevState => ({
+      messages: [...prevState.messages, data]
+    }))
+    console.log(this.state.messages)
   }
 
   render() {
@@ -77,15 +87,17 @@ class Chat extends Component {
         })}
         </div>
         <div className='editor-box'>
-          <textarea 
-            className="text-box"
-            value={this.state.textValue}
-            onChange={this.handleChange}
-            onKeyUp={this.onEnterKey}
-            rows="2" 
-            placeholder="Type your message here...">
-          </textarea>
-          <input type="button" onClick={this.handleSubmit} value="Send" />
+          <form>
+            <textarea 
+              className="text-box"
+              value={this.state.textValue}
+              onChange={this.handleChange}
+              onKeyUp={this.onEnterKey}
+              rows="2" 
+              placeholder="Type your message here...">
+            </textarea>
+            <input type="submit" onClick={this.handleClick} value="Send" />
+          </form>
         </div>
       </div>
       )

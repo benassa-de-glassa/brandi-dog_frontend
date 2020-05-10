@@ -1,14 +1,8 @@
 // import socketIO from "socket.io-client"
 import io from 'socket.io-client'
 
-import { API_URL } from './paths'
+import { SIO_URL } from './paths'
 
-const socket = io(API_URL)  //, 
-//     {
-//         transports: ['websocket'],
-//         jsonp: false
-//     }
-// )
-
+const socket = io(SIO_URL)  
 
 export { socket }

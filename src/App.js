@@ -3,18 +3,21 @@ import React, {Component} from 'react';
 import './App.css';
 import './mycss.css'
 
-import TopBar from './components/Topbar'
+import TopBar from './components/topbar/Topbar'
 import Menu from './components/menu/Menu'
 import Game from './components/game/Game'
 
 import { socket } from './socket'
-// const socket = io('localhost:8000')
+import { postData } from './paths'
+
+const DEBUG = true;
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       socketConnected: false,
+      playerLoggedIn: false,
       showMenu: false,
       player: {
         name: "", 
@@ -22,7 +25,9 @@ class App extends Component {
       }
     }
 
-    this.toggleMenu = this.toggleMenu.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this)
+    this.registerPlayer = this.registerPlayer.bind(this)
+    this.playerQuit = this.playerQuit.bind(this)
   }
 
   startSocketIO() {
@@ -40,11 +45,31 @@ class App extends Component {
 
   componentDidMount() {
     this.startSocketIO()
-  }
 
+    if (DEBUG) {
+      this.registerPlayer('testName')
+    }
+  }
 
   toggleMenu() {
     this.setState({showMenu: !this.state.showMenu})
+  }
+
+  async registerPlayer(player) {
+    // sends player name to API_URL/player
+    // returns {name: str, id: str}
+    const responseJson = await postData('player', {name: player})
+    this.setState({
+      playerLoggedIn: true,
+      player: responseJson
+    })
+  }
+
+  playerQuit() {
+    this.setState({
+      playerLoggedIn: false,
+      player: {name: "", id: undefined}
+    })
   }
   
   render() {
@@ -53,16 +78,22 @@ class App extends Component {
         <header>
           <TopBar 
               socketConnected={this.state.socketConnected}
+              playerLoggedIn={this.state.playerLoggedIn}
               player={this.state.player}
+              registerPlayer={this.registerPlayer}
               showMenu={this.state.showMenu} 
               toggleMenu={this.toggleMenu}
+              playerQuit={this.playerQuit}
           />
         </header>
         { 
           this.state.showMenu &&
           <Menu/> 
         }
-        <Game player={this.state.player}/>
+        {
+          this.state.playerLoggedIn &&
+          <Game player={this.state.player}/>
+        }
       </div>
     )
   };
