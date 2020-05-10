@@ -96,7 +96,7 @@ class Chat extends Component {
               rows="2" 
               placeholder="Type your message here...">
             </textarea>
-            <input type="submit" onClick={this.handleClick} value="Send" />
+            <input type="button" onClick={this.handleClick} value="Send" />
           </form>
         </div>
       </div>
