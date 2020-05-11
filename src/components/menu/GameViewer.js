@@ -4,6 +4,7 @@ import { socket } from '../../socket'
 import { get, postData } from '../../paths'
 
 var GameViewer = function(props) {
+    // use hooks because cooler!?
     const [gameList, setGameList] = useState([])
     const [createGame, setCreateGame] = useState(false)
     const [input, setInput] = useState("")
@@ -11,7 +12,6 @@ var GameViewer = function(props) {
 
     const updateGameList = async function() {
         const responseJson = await get('games')
-        console.log(responseJson)
         setGameList(responseJson)
     }
 
@@ -25,8 +25,12 @@ var GameViewer = function(props) {
         updateGameList()
     }
 
-    const joinGame = () => {
-
+    const joinGame = async () => {
+        if (selectedRow !== undefined) {
+            const gameId = gameList[selectedRow].game_id
+            const responseJson = await postData('games/' + gameId + '/join')
+            console.log(responseJson)
+        }
     }
 
     // like componendDidMount
@@ -36,6 +40,7 @@ var GameViewer = function(props) {
 
     return(
         <div id="game-viewer">
+            <strong>Game List</strong>
             <table id="game-list-table">
                 <thead>
                     <tr>
@@ -54,7 +59,7 @@ var GameViewer = function(props) {
                 )}
                 </tbody>
             </table>
-            <input type='button' className="mr-auto" onClick={() => joinGame(true)} value='Join' disabled={!selectedRow}/>
+            <input type='button' className="mr-auto" onClick={() => joinGame(true)} value='Join' disabled={selectedRow === undefined}/>
             <input type='button' onClick={updateGameList} value='Update'/>
             { 
                 props.playerLoggedIn &&
