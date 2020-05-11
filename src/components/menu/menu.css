@@ -37,8 +37,15 @@
     max-height: 70%;
 }
 
-#game-list-table {
-    width: 80%;
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
 thead {
@@ -46,9 +53,13 @@ thead {
 }
 
 .selected-row {
-    background-color: lightgreen;
+    background-color: lightgoldenrodyellow;
 }
 
-#game-list-table tbody tr:hover :not(.selected-row){
+.joined-row {
+    background-color: lightskyblue;
+}
+
+#game-list-table tbody tr:hover{
     background-color: lightgrey;
 }
