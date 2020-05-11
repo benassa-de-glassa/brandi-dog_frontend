@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
-import GameViewer from "./GameViewer"
+import GameViewer from './GameViewer'
+import GlobalChat from './GlobalChat'
 import './menu.css'
 
 
@@ -13,11 +14,15 @@ class Menu extends Component {
 
     render() {
         return (
-            <div className="menu-container">
+            <div className='menu-container'>
                 <GameViewer 
                     playerLoggedIn={this.props.playerLoggedIn} 
                     player={this.props.player}
-                    getGameID={this.props.getGameID}
+                    setGameID={this.props.setGameID}
+                />
+                <GlobalChat 
+                    playerLoggedIn={this.props.playerLoggedIn} 
+                    player={this.props.player}
                 />
             </div>
         )
