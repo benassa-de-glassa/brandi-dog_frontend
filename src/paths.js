@@ -6,7 +6,6 @@ export const SIO_URL = "http://localhost:8000"
 
 export var postData = async function(relURL = '', data = {}) {
     let url = new URL(relURL, API_URL)
-    console.log(JSON.stringify(data))
     const response = await fetch(url, {
         method: 'POST',
         mode: 'cors',
