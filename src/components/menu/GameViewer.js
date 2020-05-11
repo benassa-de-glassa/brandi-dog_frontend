@@ -23,19 +23,13 @@ var GameViewer = function(props) {
             game_name: input
         })
         updateGameList()
+        console.log(responseJson)
         joinGame(responseJson.game_id)
+
     }
 
     const joinGame = async (gameID) => {
-        if (gameID !== undefined){
-            const responseJson = await postData('games/' + gameID + '/join', 
-                props.player
-            )
-            props.getGameID(gameID)
-            updateGameList()
-        }
-
-        else if (selectedRow !== undefined) {
+        if (gameID === true) {
             const gameId = gameList[selectedRow].game_id
             const responseJson = await postData('games/' + gameId + '/join', 
                 props.player
@@ -49,6 +43,14 @@ var GameViewer = function(props) {
             props.getGameID(gameId)
             updateGameList()
         }
+        else if (gameID !== undefined){
+            const responseJson = await postData('games/' + gameID + '/join', 
+                props.player
+            )
+            props.getGameID(gameID)
+            updateGameList()
+        }
+        
     }
 
     // like componendDidMount

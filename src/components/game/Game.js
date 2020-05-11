@@ -5,19 +5,13 @@ import Board from '../board/Board'
 import Controls from '../controls/Controls'
 
 import { socket } from '../../socket'
+import { get, postData } from '../../paths'
 
 class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            cards: [
-                { uid: 0, value: 1, color: "hearts" },
-                { uid: 1, value: "Q", color: "hearts" },
-                { uid: 2, value: 3, color: "hearts" },
-                { uid: 3, value: 4, color: "hearts" },
-                { uid: 4, value: 5, color: "hearts" },
-                { uid: 5, value: "K", color: "hearts" }
-            ],
+            cards: [],
             selectedCardIndex: null,
             players: ['', '', '', ''],
             marbles: []
@@ -25,6 +19,8 @@ class Game extends Component {
 
         this.cardClicked = this.cardClicked.bind(this)
         this.handleNewGameState = this.handleNewGameState.bind(this)
+        this.handleNewPlayerState = this.handleNewPlayerState.bind(this)
+        this.startGame = this.startGame.bind(this)
     }
 
 
@@ -32,7 +28,7 @@ class Game extends Component {
         if (prevProps.gameID !== this.props.gameID){ // change in game id means player hs joined a new game
             socket.emit('join-game', {
                 game_id: this.props.gameID, 
-                player: this.props.player
+                player: this.props.player,
             })
         }
     }
@@ -42,16 +38,22 @@ class Game extends Component {
         var marbles = []
         data.order.forEach(uid => {
             marbles.push(...data.players[uid].marbles)
-        });
+        })
         this.setState(prevState => 
             ({
                 ...prevState,
-                players: data.order.map(uid => data.players[uid]),
-                marbles: marbles
+                players: players,
+                marbles: marbles,
+                game_state: data.game_state,
+                round_state: data.round_state,
             })
         )
     }
 
+    handleNewPlayerState(data){
+        console.log(data)
+        this.setState({cards: data.hand})
+    }
     componentDidMount() {
         socket.on('game-state', data => {
             console.log('received game state', data)
@@ -59,6 +61,7 @@ class Game extends Component {
         })
         socket.on('player-state', data => {
             console.log('received player state', data)
+            this.handleNewPlayerState(data)
           })
         
         socket.on('join-game-success', data => {
@@ -69,7 +72,12 @@ class Game extends Component {
 
     cardClicked(index) {
         console.log(this.state.cards[index].value + " clicked")
-        this.setState({selectedCardIndex: index})
+        console.log(index, this.state.selectedCardIndex)
+        if (index === this.state.selectedCardIndex){
+            this.setState({selectedCardIndex: null})
+        } else {
+            this.setState({selectedCardIndex: index})
+        }
 
         // TODO: Request valid moves from server and display them on the board
     }
@@ -80,15 +88,23 @@ class Game extends Component {
         // TODO: Request possible cards that can be played and mark them
     }
 
+    async startGame() {
+        var response = await postData('games/' + this.props.gameID + '/start', 
+                this.props.player
+            )
+    }
+
     render() {
         return (
             <div className="game-container">
                 <Board playerList={this.state.players} marbleList={this.state.marbles}/>
                 <div className="right-container">
                     <Controls 
-                            cards={this.state.cards} 
-                            cardClicked={this.cardClicked}
-                            selectedCardIndex={this.state.selectedCardIndex}
+                        cards={this.state.cards} 
+                        cardClicked={this.cardClicked}
+                        selectedCardIndex={this.state.selectedCardIndex}
+                        selectedCard={this.state.cards[this.state.selectedCardIndex]}
+                        startGame={this.startGame}
                     />
                     <Chat player={this.props.player}/>
                 </div>
