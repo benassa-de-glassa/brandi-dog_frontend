@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from 'react'
+import React, { Component } from 'react'
 
 import { socket } from '../../socket'
 // import { get, postData } from '../../paths'
