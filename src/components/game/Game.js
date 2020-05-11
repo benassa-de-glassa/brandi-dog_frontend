@@ -4,6 +4,7 @@ import Chat from '../chat/Chat'
 import Board from '../board/Board'
 import Controls from '../controls/Controls'
 
+import { socket } from '../../socket'
 
 class Game extends Component {
     constructor(props) {
@@ -18,10 +19,53 @@ class Game extends Component {
                 { uid: 5, value: "K", color: "hearts" }
             ],
             selectedCardIndex: null,
+            players: ['', '', '', ''],
+            marbles: []
         }
 
         this.cardClicked = this.cardClicked.bind(this)
+        this.handleNewGameState = this.handleNewGameState.bind(this)
     }
+
+
+    componentDidUpdate(prevProps){
+        if (prevProps.gameID !== this.props.gameID){ // change in game id means player hs joined a new game
+            socket.emit('join-game', {
+                game_id: this.props.gameID, 
+                player: this.props.player
+            })
+        }
+    }
+
+    handleNewGameState(data){
+        const players = data.order.map(uid => data.players[uid])
+        var marbles = []
+        data.order.forEach(uid => {
+            marbles.push(...data.players[uid].marbles)
+        });
+        this.setState(prevState => 
+            ({
+                ...prevState,
+                players: data.order.map(uid => data.players[uid]),
+                marbles: marbles
+            })
+        )
+    }
+
+    componentDidMount() {
+        socket.on('game-state', data => {
+            console.log('received game state', data)
+            this.handleNewGameState(data)
+        })
+        socket.on('player-state', data => {
+            console.log('received player state', data)
+          })
+        
+        socket.on('join-game-success', data => {
+            console.log('succesfully joined game socket', data)
+          })
+          
+      }
 
     cardClicked(index) {
         console.log(this.state.cards[index].value + " clicked")
@@ -39,7 +83,7 @@ class Game extends Component {
     render() {
         return (
             <div className="game-container">
-                <Board />
+                <Board playerList={this.state.players} marbleList={this.state.marbles}/>
                 <div className="right-container">
                     <Controls 
                             cards={this.state.cards} 

@@ -8,16 +8,16 @@ function Board(props) {
   const height = 800;
   const width = 800;
 
-  // playerList = props.playerList
-  var playerList = [{name: "Player 1"}, {name: "Player 2"}, {name: "Player 3"}, {name: "Player 4"}] 
+  var playerList = [...props.playerList, '', '', '', ''] // make sure this list is at least 4 long.. players are added to the beginning
+  // var playerList = [{name: "Player 1"}, {name: "Player 2"}, {name: "Player 3"}, {name: "Player 4"}] 
   var topCard = {color: "blue", number: 3}
 
   var stepOccupation = new Array(64);
-  stepOccupation[0] = "red"
-  stepOccupation[4] = "red"
-  stepOccupation[20] = "red"
-  stepOccupation[33] = "blue"
-  stepOccupation[60] = "yellow"
+  
+  // place the marbles
+  props.marbleList.forEach(marble => {
+    stepOccupation[marble.position] = marble.color
+  });
 
   const radius = 12;
   const outerRadius = 18;
