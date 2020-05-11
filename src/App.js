@@ -18,7 +18,7 @@ class App extends Component {
     this.state = {
       socketConnected: false,
       playerLoggedIn: false,
-      showMenu: false,
+      showMenu: true,
       player: {
         name: "", 
         uid: undefined
@@ -101,7 +101,7 @@ class App extends Component {
           /> 
         }
         {
-          this.state.playerLoggedIn &&
+          this.state.playerLoggedIn && this.state.gameID !== undefined && 
           <Game player={this.state.player} gameID={this.state.gameID}/>
         }
       </div>
