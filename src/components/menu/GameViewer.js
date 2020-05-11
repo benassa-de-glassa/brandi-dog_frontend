@@ -9,48 +9,46 @@ var GameViewer = function(props) {
     const [createGame, setCreateGame] = useState(false)
     const [input, setInput] = useState("")
     const [selectedRow, setSelectRow] = useState()
+    const [joinedGame, setJoinedGame] = useState(false)
 
     const updateGameList = async function() {
         const responseJson = await get('games')
         setGameList(responseJson)
     }
 
-    const handleInput = (event) => setInput(event.target.value)
-    const handleSubmit = async (event) => {
+    const handleCreateGameInput = (event) => setInput(event.target.value)
+    const handleCreateGameSubmit = async (event) => {
         event.preventDefault()
         const responseJson = await postData('games', {
             player: props.player, 
             game_name: input
         })
-        updateGameList()
-        console.log(responseJson)
-        joinGame(responseJson.game_id)
-
+        if ('game_id' in responseJson) {
+            updateGameList()
+            joinGame(responseJson.game_id)
+            setCreateGame(false)
+        } else {
+            console.log(responseJson.detail)
+        }
     }
 
     const joinGame = async (gameID) => {
-        if (gameID === true) {
-            const gameId = gameList[selectedRow].game_id
-            const responseJson = await postData('games/' + gameId + '/join', 
-                props.player
-            )
+        const responseJson = await postData('games/' + gameID + '/join', 
+            props.player
+        )
+        if ('game_id' in responseJson) {
             socket.emit('join-game', 
                 {
                     player: props.player,
-                    game_id: gameId
+                    game_id: gameID
                 }
             )
-            props.getGameID(gameId)
-            updateGameList()
+            props.setGameID(gameID)
+            setJoinedGame(gameID)
+        } else {
+            console.log(responseJson.detail)
         }
-        else if (gameID !== undefined){
-            const responseJson = await postData('games/' + gameID + '/join', 
-                props.player
-            )
-            props.getGameID(gameID)
-            updateGameList()
-        }
-        
+        updateGameList()
     }
 
     // like componendDidMount
@@ -71,7 +69,8 @@ var GameViewer = function(props) {
                 </thead>
                 <tbody>
                 {gameList.map( (game, index) => 
-                    <tr key={game.game_name} onClick={() => setSelectRow(index)} className={index === selectedRow ? "selected-row" : ""}>
+                    <tr key={game.game_name} onClick={() => setSelectRow(index)} 
+                            className={(index === selectedRow ? "selected-row " : "") + (game.game_id === joinedGame ? 'joined-row' : "")}>
                         <td>{game.game_name}</td>
                         <td>{game.host.name}</td>
                         <td>{Object.values(game.players).map(player => player.name).join(', ')}</td>
@@ -79,19 +78,25 @@ var GameViewer = function(props) {
                 )}
                 </tbody>
             </table>
-            <input type='button' className="mr-auto" onClick={() => joinGame(true)} value='Join' disabled={selectedRow === undefined}/>
+            { }
+            <input type='button' className="mr-auto" 
+                    onClick={() => joinGame(gameList[selectedRow].game_id)} 
+                    value='Join' disabled={selectedRow === undefined || joinedGame}/>
+            <input type='button' className="mr-auto" 
+                    onClick={() => alert('not implemented yet. complain on github')} 
+                    value='Leave' disabled={!joinedGame}/>
             <input type='button' onClick={updateGameList} value='Update'/>
             { 
-                props.playerLoggedIn &&
-                <input type='button' onClick={() => setCreateGame(true)} value='New Lobby'/>
+                props.playerLoggedIn && 
+                <input type='button' onClick={() => setCreateGame(true)} value='New Lobby' disabled={joinedGame}/>
             }
             {
                 createGame && 
-                <form className='ml-auto mr-2' onSubmit={handleSubmit}>
+                <form className='ml-auto mr-2' onSubmit={handleCreateGameSubmit}>
                     <label className='mr-1'>
                     Enter a name: </label>
                     <input type='text' className='mr-1' value={input} onChange=
-                {handleInput} placeholder='Enter game name'/>
+                {handleCreateGameInput} placeholder='Enter game name'/>
                     
                     <input type='submit' value='Create Game' />
                 </form>
