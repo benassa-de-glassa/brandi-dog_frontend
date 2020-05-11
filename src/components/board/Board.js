@@ -12,18 +12,25 @@ function Board(props) {
   // var playerList = [{name: "Player 1"}, {name: "Player 2"}, {name: "Player 3"}, {name: "Player 4"}] 
   var topCard = {color: "blue", number: 3}
 
+  var homeOccupation = new Array(16);
   var stepOccupation = new Array(64);
   
   // place the marbles
   props.marbleList.forEach(marble => {
-    stepOccupation[marble.position] = marble.color
+    if (marble.position < 0){
+      homeOccupation[-(marble.position + 1)] = marble.color
+    } else {
+      stepOccupation[marble.position] = marble.color
+    }
   });
 
   const radius = 12;
   const outerRadius = 18;
 
   var onClickHandler = function (d) {
-    console.log(d)
+    if (typeof d === typeof 0){ // check whether d is an int or a string
+      console.log(d)
+    }
   }
 
   var playerBoxClicked = function (d) {
@@ -111,7 +118,10 @@ function Board(props) {
           data =>
             <circle 
               key={"home " + data.x + " " + data.y}
-              className="step"
+              className={homeOccupation[-data.id] 
+                ? "step occupied occupied-" + homeOccupation[-data.id]
+                : "step"
+              }
               id={"home" + data.color + "-" + data.id} 
               cx={data.x}
               cy={data.y}
