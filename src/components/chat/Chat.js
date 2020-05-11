@@ -67,7 +67,7 @@ class Chat extends Component {
               <div className="message server-message" key={msg.time}>
                 <div className="message-text">
                   <span className="mr-auto">{msg.text}
-                  </span><span className="float-right">{msg.time}
+                  </span><span className="message-time float-right">{msg.time}
                   </span>
                 </div>
               </div>
@@ -76,7 +76,7 @@ class Chat extends Component {
             return(
               <div className="message" key={msg.time}>
                 <div className="message-text">
-                  <p className="message-text"><span><strong>{msg.sender}</strong></span><span className="float-right">{msg.time}</span></p>
+                  <p className="message-text"><span><strong>{msg.sender}</strong></span><span className="message-time float-right">{msg.time}</span></p>
                   <p className="message-text">{msg.text}</p>
                 </div>
               </div>
