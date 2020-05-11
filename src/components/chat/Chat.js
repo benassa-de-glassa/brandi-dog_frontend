@@ -38,13 +38,11 @@ class Chat extends Component {
   }
 
   componentDidUpdate() {
-    console.log("chat updated")
     var objDiv = document.getElementById("message-box");
     objDiv.scrollTop = objDiv.scrollHeight;
   }
 
   componentDidMount() {
-    console.log('chat moutned')
     socket.on('chat_message', data => {
       console.log('received')
       this.addMessage(data)
