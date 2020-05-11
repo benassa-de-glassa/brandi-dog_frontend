@@ -23,7 +23,7 @@
 }
 
 .step:hover {
-    stroke-width: 6px;
+    stroke-width: 5px;
     cursor: pointer;
 }
 
