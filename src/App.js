@@ -68,7 +68,7 @@ class App extends Component {
   playerQuit() {
     this.setState({
       playerLoggedIn: false,
-      player: {name: "", id: undefined}
+      player: {name: "", uid: undefined}
     })
   }
   
@@ -88,7 +88,10 @@ class App extends Component {
         </header>
         { 
           this.state.showMenu &&
-          <Menu/> 
+          <Menu 
+              playerLoggedIn={this.state.playerLoggedIn}
+              player={this.state.player}
+          /> 
         }
         {
           this.state.playerLoggedIn &&
