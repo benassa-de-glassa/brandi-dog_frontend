@@ -1,6 +1,7 @@
 .menu-container {
-    height: 300px;
+    height: 500px;
     max-width: 1200px;
+    display: flex;
     margin: 0 auto;
     margin-bottom: 10px;
     box-sizing: border-box;
@@ -10,10 +11,30 @@
 }
 
 #game-viewer {
-    margin: 20px;
+    margin: 10px;
     display: inline-block;
+    box-sizing: border-box;
     background: white;
     width: 50%
+}
+
+#global-chat-container {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    background: white;
+    margin: 10px;
+    width: 50%;
+}
+
+#global-chat-editor {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+#global-message-box {
+    max-height: 70%;
 }
 
 #game-list-table {

@@ -34,9 +34,14 @@ div.server-message {
 }
 
 .message-text {
+    font-size: 16px;
     margin: 5px 3px;
     display: block;
     word-wrap: break-word;
+}
+
+.message-time {
+    font-size: 11px;
 }
 
 .float-right {
@@ -44,7 +49,7 @@ div.server-message {
 }
 
 .text-box {
-    font-size: 16px;
+    font-size: 14px;
     box-sizing: border-box;
     height: 60%;
     width: 100%;
