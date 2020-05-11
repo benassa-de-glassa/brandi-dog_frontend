@@ -20,6 +20,10 @@
     width: 80%;
 }
 
+thead {
+    background-color: whitesmoke;
+}
+
 .selected-row {
     background-color: lightgreen;
 }
