@@ -23,13 +23,31 @@ var GameViewer = function(props) {
             game_name: input
         })
         updateGameList()
+        joinGame(responseJson.game_id)
     }
 
-    const joinGame = async () => {
-        if (selectedRow !== undefined) {
+    const joinGame = async (gameID) => {
+        if (gameID !== undefined){
+            const responseJson = await postData('games/' + gameID + '/join', 
+                props.player
+            )
+            props.getGameID(gameID)
+            updateGameList()
+        }
+
+        else if (selectedRow !== undefined) {
             const gameId = gameList[selectedRow].game_id
-            const responseJson = await postData('games/' + gameId + '/join')
-            console.log(responseJson)
+            const responseJson = await postData('games/' + gameId + '/join', 
+                props.player
+            )
+            socket.emit('join-game', 
+                {
+                    player: props.player,
+                    game_id: gameId
+                }
+            )
+            props.getGameID(gameId)
+            updateGameList()
         }
     }
 
@@ -54,7 +72,7 @@ var GameViewer = function(props) {
                     <tr key={game.game_name} onClick={() => setSelectRow(index)} className={index === selectedRow ? "selected-row" : ""}>
                         <td>{game.game_name}</td>
                         <td>{game.host.name}</td>
-                        <td>{game.players.map(player => player.name).join(', ')}</td>
+                        <td>{Object.values(game.players).map(player => player.name).join(', ')}</td>
                     </tr>
                 )}
                 </tbody>

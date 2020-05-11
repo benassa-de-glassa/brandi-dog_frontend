@@ -29,6 +29,7 @@ class Menu extends Component {
                 <GameViewer 
                     playerLoggedIn={this.props.playerLoggedIn} 
                     player={this.props.player}
+                    getGameID={this.props.getGameID}
                 />
             </div>
         )

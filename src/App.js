@@ -22,12 +22,14 @@ class App extends Component {
       player: {
         name: "", 
         uid: undefined
-      }
+      },
+      gameID: undefined
     }
 
     this.toggleMenu = this.toggleMenu.bind(this)
     this.registerPlayer = this.registerPlayer.bind(this)
     this.playerQuit = this.playerQuit.bind(this)
+    this.getGameID = this.getGameID.bind(this)
   }
 
   startSocketIO() {
@@ -53,6 +55,10 @@ class App extends Component {
 
   toggleMenu() {
     this.setState({showMenu: !this.state.showMenu})
+  }
+
+  getGameID(gameID) {
+    this.setState({gameID: gameID})
   }
 
   async registerPlayer(player) {
@@ -91,11 +97,12 @@ class App extends Component {
           <Menu 
               playerLoggedIn={this.state.playerLoggedIn}
               player={this.state.player}
+              getGameID={this.getGameID}
           /> 
         }
         {
           this.state.playerLoggedIn &&
-          <Game player={this.state.player}/>
+          <Game player={this.state.player} gameID={this.state.gameID}/>
         }
       </div>
     )
