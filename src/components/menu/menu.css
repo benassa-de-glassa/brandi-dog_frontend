@@ -20,6 +20,10 @@
     width: 80%;
 }
 
-#game-list-table tr:hover {
+.selected-row {
+    background-color: lightgreen;
+}
+
+#game-list-table tbody tr:hover :not(.selected-row){
     background-color: lightgrey;
 }

@@ -26,7 +26,10 @@ class Menu extends Component {
     render() {
         return (
             <div className="menu-container">
-                <GameViewer games={this.state.games} />
+                <GameViewer 
+                    playerLoggedIn={this.props.playerLoggedIn} 
+                    player={this.props.player}
+                />
             </div>
         )
     }
