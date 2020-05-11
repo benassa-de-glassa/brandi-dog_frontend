@@ -63,3 +63,7 @@ thead {
 #game-list-table tbody tr:hover{
     background-color: lightgrey;
 }
+
+.error {
+    color: red;
+}

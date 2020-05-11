@@ -10,6 +10,7 @@ var GameViewer = function(props) {
     const [input, setInput] = useState("")
     const [selectedRow, setSelectRow] = useState()
     const [joinedGame, setJoinedGame] = useState(false)
+    const [error, setError] = useState("")
 
     const updateGameList = async function() {
         const responseJson = await get('games')
@@ -47,6 +48,7 @@ var GameViewer = function(props) {
             setJoinedGame(gameID)
         } else {
             console.log(responseJson.detail)
+            setError(responseJson.detail)
         }
         updateGameList()
     }
@@ -59,6 +61,9 @@ var GameViewer = function(props) {
     return(
         <div id="game-viewer">
             <strong>Game List</strong>
+            { error && 
+                <p className='error'>{error}</p>
+            }
             <table id="game-list-table">
                 <thead>
                     <tr>
