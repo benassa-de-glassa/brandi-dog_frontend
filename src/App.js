@@ -29,7 +29,7 @@ class App extends Component {
     this.toggleMenu = this.toggleMenu.bind(this)
     this.registerPlayer = this.registerPlayer.bind(this)
     this.playerQuit = this.playerQuit.bind(this)
-    this.getGameID = this.getGameID.bind(this)
+    this.setGameID = this.setGameID.bind(this)
   }
 
   startSocketIO() {
@@ -57,7 +57,7 @@ class App extends Component {
     this.setState({showMenu: !this.state.showMenu})
   }
 
-  getGameID(gameID) {
+  setGameID(gameID) {
     this.setState({gameID: gameID})
   }
 
@@ -97,7 +97,7 @@ class App extends Component {
           <Menu 
               playerLoggedIn={this.state.playerLoggedIn}
               player={this.state.player}
-              getGameID={this.getGameID}
+              setGameID={this.setGameID}
           /> 
         }
         {
