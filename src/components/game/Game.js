@@ -5,7 +5,7 @@ import Board from '../board/Board'
 import Controls from '../controls/Controls'
 
 import { socket } from '../../socket'
-import { get, postData } from '../../paths'
+import { postData } from '../../paths'
 
 class Game extends Component {
     constructor(props) {
@@ -89,9 +89,13 @@ class Game extends Component {
     }
 
     async startGame() {
-        var response = await postData('games/' + this.props.gameID + '/start', 
+        var responseJson = await postData('games/' + this.props.gameID + '/start', 
                 this.props.player
             )
+        if ('game_id' in responseJson) {
+        } else {
+            console.log(responseJson.detail)
+        }
     }
 
     render() {
