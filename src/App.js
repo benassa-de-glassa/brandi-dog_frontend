@@ -49,7 +49,7 @@ class App extends Component {
     this.startSocketIO()
 
     if (DEBUG) {
-      this.registerPlayer('testName')
+      this.registerPlayer('testName', () => {})
     }
   }
 
@@ -61,7 +61,7 @@ class App extends Component {
     this.setState({gameID: gameID})
   }
 
-  async registerPlayer(player) {
+  async registerPlayer(player, errorCallback) {
     // sends player name to API_URL/player
     // returns {name: str, id: str}
     const responseJson = await postData('player', {name: player})
@@ -72,6 +72,7 @@ class App extends Component {
       })
     } else {
       console.log(responseJson.detail)
+      errorCallback(responseJson.detail)
     }
   }
 

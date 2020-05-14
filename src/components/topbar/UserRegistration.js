@@ -3,10 +3,14 @@ import React, { Component } from 'react'
 class UserRegistration extends Component {
     constructor(props) {
         super(props)
-        this.state = {value: ''}
+        this.state = {
+            value: '',
+            placeholder: 'Enter user name'
+        }
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.submitError = this.submitError.bind(this)
     }
 
     handleChange(event) {
@@ -15,7 +19,12 @@ class UserRegistration extends Component {
 
     async handleSubmit(event) {
         event.preventDefault();
-        this.props.registerPlayer(this.state.value)
+        // supply callback in case of error
+        this.props.registerPlayer(this.state.value, this.submitError)
+    }
+
+    submitError(message) {
+        this.setState({value: '', placeholder: message})
     }
 
     render() {
@@ -24,7 +33,7 @@ class UserRegistration extends Component {
                 <label className='mr-1'>
                 Log in: </label>
                 <input type='text' className='mr-1' value={this.state.value} onChange=
-            {this.handleChange} placeholder='Enter user name'/>
+            {this.handleChange} placeholder={this.state.placeholder}/>
                 
                 <input type='submit' className='top-bar-link' value='Submit' />
             </form>
