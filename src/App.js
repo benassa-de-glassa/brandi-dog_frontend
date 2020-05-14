@@ -65,10 +65,14 @@ class App extends Component {
     // sends player name to API_URL/player
     // returns {name: str, id: str}
     const responseJson = await postData('player', {name: player})
-    this.setState({
-      playerLoggedIn: true,
-      player: responseJson
-    })
+    if ('uid' in responseJson) {
+      this.setState({
+        playerLoggedIn: true,
+        player: responseJson
+      })
+    } else {
+      console.log(responseJson.detail)
+    }
   }
 
   playerQuit() {
