@@ -17,6 +17,7 @@ function Board(props) {
   
   // place the marbles
   props.marbleList.forEach(marble => {
+    // negative positions correspond to home
     if (marble.position < 0){
       homeOccupation[-(marble.position + 1)] = marble.color
     } else {
