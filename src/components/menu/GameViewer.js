@@ -47,8 +47,8 @@ var GameViewer = function(props) {
             props.setGameID(gameID)
             setJoinedGame(gameID)
         } else {
-            console.log(responseJson.detail)
-            setError(responseJson.detail)
+            console.log(responseJson.detail);
+            //'detail' in responseJson && setError(responseJson.detail)
         }
         updateGameList()
     }
@@ -91,10 +91,7 @@ var GameViewer = function(props) {
                     onClick={() => alert('not implemented yet. complain on github')} 
                     value='Leave' disabled={!joinedGame}/>
             <input type='button' onClick={updateGameList} value='Update'/>
-            { 
-                props.playerLoggedIn && 
-                <input type='button' onClick={() => setCreateGame(true)} value='New Lobby' disabled={joinedGame}/>
-            }
+            <input type='button' onClick={() => setCreateGame(true)} value='New Lobby' disabled={joinedGame || !props.playerLoggedIn}/>
             {
                 createGame && 
                 <form className='ml-auto mr-2' onSubmit={handleCreateGameSubmit}>

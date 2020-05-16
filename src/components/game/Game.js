@@ -14,10 +14,12 @@ class Game extends Component {
             cards: [],
             selectedCardIndex: null,
             players: ['', '', '', ''],
-            marbles: []
+            marbles: [],
+            possibleMoves: {}
         }
 
         this.cardClicked = this.cardClicked.bind(this)
+        this.cardPlayed = this.cardPlayed.bind(this)
         this.handleNewGameState = this.handleNewGameState.bind(this)
         this.handleNewPlayerState = this.handleNewPlayerState.bind(this)
         this.startGame = this.startGame.bind(this)
@@ -25,7 +27,8 @@ class Game extends Component {
 
 
     componentDidUpdate(prevProps){
-        if (prevProps.gameID !== this.props.gameID){ // change in game id means player hs joined a new game
+        if (prevProps.gameID !== this.props.gameID){ 
+            // change in game id means player has joined a new game
             socket.emit('join-game', {
                 game_id: this.props.gameID, 
                 player: this.props.player,
@@ -54,6 +57,7 @@ class Game extends Component {
         console.log(data)
         this.setState({cards: data.hand})
     }
+
     componentDidMount() {
         socket.on('game-state', data => {
             console.log('received game state', data)
@@ -80,6 +84,10 @@ class Game extends Component {
         }
 
         // TODO: Request valid moves from server and display them on the board
+    }
+
+    cardPlayed(index) {
+
     }
 
     stepClicked(index) {
@@ -109,6 +117,7 @@ class Game extends Component {
                         selectedCardIndex={this.state.selectedCardIndex}
                         selectedCard={this.state.cards[this.state.selectedCardIndex]}
                         startGame={this.startGame}
+                        possibleMoves={this.state.possibleMoves}
                     />
                     <Chat player={this.props.player}/>
                 </div>
