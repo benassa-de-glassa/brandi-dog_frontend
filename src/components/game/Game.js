@@ -21,6 +21,7 @@ class Game extends Component {
             gameStarted: false, 
             cards: [],
             selectedCardIndex: null,
+            selectedAction: null,
             players: ['', '', '', ''],
             marbles: [],
             possibleMoves: {},
@@ -31,7 +32,8 @@ class Game extends Component {
         this.handleNewGameState = this.handleNewGameState.bind(this)
         this.handleNewPlayerState = this.handleNewPlayerState.bind(this)
         this.startGame = this.startGame.bind(this)
-        this.homeClicked = this.homeClicked.bind(this)
+        this.marbleClicked = this.marbleClicked.bind(this)
+        this.getActionFromControls = this.getActionFromControls.bind(this)
     }
 
 
@@ -105,27 +107,37 @@ class Game extends Component {
         // TODO: Request valid moves from server and display them on the board
     }
 
-    stepClicked(index) {
-        console.log("step" + index + "clicked")
 
-        // TODO: Request possible cards that can be played and mark them
+
+    getActionFromControls(val) {
+        this.setState({selectedAction: val})
     }
-
-    async homeClicked(index) {
+    async marbleClicked(marble) {
         if (this.state.selectedCardIndex !== null) {
             console.log('homeClicked')
             const selectedCard = this.state.cards[this.state.selectedCardIndex]
-            var relURL = 'games/' + this.props.gameID + '/action'
-            var responseJson = await postData(relURL, 
-                {
-                    player: this.props.player,
-                    action: {
-                        action: 0,
-                        card: selectedCard, 
-                        mid: 0
-                    }
+            
+            if (selectedCard.actions.length === 1){
+                this.setState({selectedAction: selectedCard.actions[0]})
+            } 
+            if (this.state.selectedAction !== null ) {
+
+                var relURL = 'games/' + this.props.gameID + '/action'
+                var responseJson = await postData(relURL, 
+                    {
+                        player: this.props.player,
+                        action: {
+                            action: this.state.selectedAction,
+                            card: selectedCard, 
+                            mid: marble.mid
+                        }
+                    })
+                    console.log(responseJson)
+                this.setState({
+                    selectedCardIndex: null,
+                    selectedAction: null
                 })
-                console.log(responseJson)
+            }
         } else {
             // TODO
         }
@@ -150,8 +162,8 @@ class Game extends Component {
                     playerList={this.state.players} 
                     marbleList={this.state.marbles}
                     selectedCardRequiresTooltip={this.state.selectedCardRequiresTooltip}
-                    stepClicked={this.stepClicked}
-                    homeClicked={this.homeClicked}
+                    marbleClicked={this.marbleClicked}
+                    // homeClicked={this.homeClicked}
                 />
                 <div className="right-container">
                     <Controls 
@@ -162,6 +174,7 @@ class Game extends Component {
                         selectedCard={this.state.cards[this.state.selectedCardIndex]}
                         startGame={this.startGame}
                         possibleMoves={this.state.possibleMoves}
+                        getAction={this.getActionFromControls}
                     />
                     <Chat player={this.props.player}/>
                 </div>

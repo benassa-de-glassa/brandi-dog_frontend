@@ -15,13 +15,17 @@ function Board(props) {
 
   var homeOccupation = new Array(16);
   var stepOccupation = new Array(64);
+  var houseOccupation = new Array(16);
   
   // place the marbles
   props.marbleList.forEach(marble => {
     // negative positions correspond to home
     if (marble.position < 0){
-      homeOccupation[-(marble.position + 1)] = marble
-    } else {
+      homeOccupation[-(marble.position +1)] = marble
+    } else if (marble.position >= 1000){
+      houseOccupation[marble.position - 1000] = marble
+    }
+    else {
       stepOccupation[marble.position] = marble
     }
   });
@@ -30,7 +34,18 @@ function Board(props) {
   const outerRadius = 18;
 
   var onClickHandler = function (data) {
-    console.log(data)
+    let marble
+    if (data.id < 0){
+      marble = homeOccupation[-data.id -1]
+    } else if (data.id >= 1000){
+
+    }
+    else{
+      marble = stepOccupation[data.id]
+    }
+    if (marble !== undefined){
+      props.marbleClicked(marble)
+    }
     if (props.selectedCardRequiresTooltip) {
       setTooltip({x: data.x, y: data.y})
     } 
@@ -41,7 +56,7 @@ function Board(props) {
   }
 
   const playerHomeClicked = function (d) {
-    props.homeClicked()
+    props.marbleClicked()
   }
 
   return (
@@ -125,15 +140,15 @@ function Board(props) {
           data =>
             <circle 
               key={"home " + data.x + " " + data.y}
-              className={homeOccupation[-data.id] 
-                ? "step occupied occupied-" + homeOccupation[-data.id].color
+              className={homeOccupation[-data.id-1] 
+                ? "step occupied occupied-" + homeOccupation[-data.id-1].color
                 : "step"
               }
               id={"home" + data.color + "-" + data.id} 
               cx={data.x}
               cy={data.y}
               r={radius}
-              onClick={() => playerHomeClicked(data)}
+              onClick={() => onClickHandler(data)}
             />
         )}
         {/* draw houses */}
@@ -141,12 +156,15 @@ function Board(props) {
           data =>
             <circle 
               key={"house " + data.x + " " + data.y}
-              className="step"
+              className={houseOccupation[data.id - 1000] 
+                ? "step occupied occupied-" + houseOccupation[data.id - 1000].color
+                : "step"
+              }
               id={"house" + data.color + "-" + data.id} 
               cx={data.x}
               cy={data.y}
               r={radius}
-              onClick={() => onClickHandler(data.color + " house " + data.id)}
+              onClick={() => onClickHandler(data)}
             />
         )}
         {/* top card */}

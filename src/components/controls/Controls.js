@@ -44,10 +44,9 @@ function Controls(props) {
 
   var selectedCardString, possibleMoveString
 
-  if (props.selectedCardIndex !== null) {
-    const selectedCard = props.cards[props.selectedCardIndex]
-    selectedCardString = selectedCard.color + '' + selectedCard.value
-    possibleMoveString = possibleMoves[selectedCard.value]
+  if (props.selectedCard !== undefined) {
+    selectedCardString = props.selectedCard.color + '' + props.selectedCard.value
+    possibleMoveString = possibleMoves[props.selectedCard.value]
   } else {
     selectedCardString = ''
     possibleMoveString = ''
@@ -57,6 +56,10 @@ function Controls(props) {
   var handleClick = event => {
     event.preventDefault()
     props.startGame()
+  }
+
+  var chooseAction =event => {
+    props.getAction(event.target.id)
   }
 
   return (
@@ -69,6 +72,8 @@ function Controls(props) {
 
       <div className="instruction-box">
         <p className="instruction-text">{possibleMoveString}</p>
+        {props.selectedCard !== undefined && props.selectedCard.actions.length > 1 && props.cards[props.selectedCardIndex].actions.map(action => 
+          <button id={action} key={action} onClick={(event) => chooseAction(event)} > {action} </button>)}
       </div>
       <Hand 
           cards={props.cards} 
