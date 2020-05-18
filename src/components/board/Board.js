@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import './board.css'
 
@@ -8,8 +8,9 @@ function Board(props) {
   const height = 800;
   const width = 800;
 
+  const [tooltip, setTooltip] = useState({x: 0, y: 0})
+
   var playerList = [...props.playerList, '', '', '', ''] // make sure this list is at least 4 long.. players are added to the beginning
-  // var playerList = [{name: "Player 1"}, {name: "Player 2"}, {name: "Player 3"}, {name: "Player 4"}] 
   var topCard = {color: "blue", number: 3}
 
   var homeOccupation = new Array(16);
@@ -19,23 +20,28 @@ function Board(props) {
   props.marbleList.forEach(marble => {
     // negative positions correspond to home
     if (marble.position < 0){
-      homeOccupation[-(marble.position + 1)] = marble.color
+      homeOccupation[-(marble.position + 1)] = marble
     } else {
-      stepOccupation[marble.position] = marble.color
+      stepOccupation[marble.position] = marble
     }
   });
 
   const radius = 12;
   const outerRadius = 18;
 
-  var onClickHandler = function (d) {
-    if (typeof d === typeof 0){ // check whether d is an int or a string
-      console.log(d)
-    }
+  var onClickHandler = function (data) {
+    console.log(data)
+    if (props.selectedCardRequiresTooltip) {
+      setTooltip({x: data.x, y: data.y})
+    } 
   }
 
   var playerBoxClicked = function (d) {
     console.log("player box " + d + " clicked!")
+  }
+
+  const playerHomeClicked = function (d) {
+    props.homeClicked()
   }
 
   return (
@@ -92,14 +98,14 @@ function Board(props) {
             <circle 
               key={data.id}
               className={stepOccupation[data.id] 
-                          ? "step occupied occupied-" + stepOccupation[data.id]
+                          ? "step occupied occupied-" + stepOccupation[data.id].color
                           : "step"
               }
               id={"step-" + data.id} 
               cx={data.x}
               cy={data.y}
               r={radius}
-              onClick={() => onClickHandler(data.id)}
+              onClick={() => onClickHandler(data)}
             />
         )}
         {/* draw outer circles */}
@@ -120,14 +126,14 @@ function Board(props) {
             <circle 
               key={"home " + data.x + " " + data.y}
               className={homeOccupation[-data.id] 
-                ? "step occupied occupied-" + homeOccupation[-data.id]
+                ? "step occupied occupied-" + homeOccupation[-data.id].color
                 : "step"
               }
               id={"home" + data.color + "-" + data.id} 
               cx={data.x}
               cy={data.y}
               r={radius}
-              onClick={() => onClickHandler(data.color + " home " + data.id)}
+              onClick={() => playerHomeClicked(data)}
             />
         )}
         {/* draw houses */}
@@ -156,6 +162,7 @@ function Board(props) {
         -10,10 h-90 a10,10 0 0 1 -10,-10 v-150 a10,10 0 0 1 10,-10 z" /> 
         <text className="card-number" x="410" y="365">7</text> */}
       </svg>
+      <div className={props.selectedCardRequiresTooltip ? 'tooltip' : 'tooltip tt-not-visible'} style={{'top': tooltip.y, 'left': tooltip.x}}></div>
     </div>
   )
 }
