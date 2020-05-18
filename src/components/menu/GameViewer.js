@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react'
 import { socket } from '../../socket'
 import { get, postData } from '../../paths'
 
+import { DEBUG } from '../../config'
+
 var GameViewer = function(props) {
     // use hooks because cooler!?
     const [gameList, setGameList] = useState([])
@@ -20,7 +22,10 @@ var GameViewer = function(props) {
     const handleCreateGameInput = (event) => setInput(event.target.value)
     const handleCreateGameSubmit = async (event) => {
         event.preventDefault()
-        const responseJson = await postData('games', {
+        var relURL = 'games'
+        if (DEBUG) { relURL += '?debug=true' }
+
+        const responseJson = await postData(relURL, {
             player: props.player, 
             game_name: input
         })
