@@ -7,22 +7,31 @@ import Controls from '../controls/Controls'
 import { socket } from '../../socket'
 import { postData } from '../../paths'
 
+// if switch is selected need to send two marble ids and a player id
+
+// array of cards that require a tooltip popup. For example, after playing
+// '4', the player can choose to move forward or backward
+// TODO: JOker
+const cardsRequiringTooltip = ['A', '4', '7', 'Ja', 'Jo']
+
 class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            gameStarted: false, 
             cards: [],
             selectedCardIndex: null,
             players: ['', '', '', ''],
             marbles: [],
-            possibleMoves: {}
+            possibleMoves: {},
+            marblesToSelect: 0,
+            selectedCardRequiresTooltip: false,
         }
-
         this.cardClicked = this.cardClicked.bind(this)
-        this.cardPlayed = this.cardPlayed.bind(this)
         this.handleNewGameState = this.handleNewGameState.bind(this)
         this.handleNewPlayerState = this.handleNewPlayerState.bind(this)
         this.startGame = this.startGame.bind(this)
+        this.homeClicked = this.homeClicked.bind(this)
     }
 
 
@@ -76,18 +85,24 @@ class Game extends Component {
 
     cardClicked(index) {
         console.log(this.state.cards[index].value + " clicked")
-        console.log(index, this.state.selectedCardIndex)
         if (index === this.state.selectedCardIndex){
-            this.setState({selectedCardIndex: null})
+            this.setState({
+                selectedCardIndex: null,
+                marblesToSelect: 0,
+                selectedCardRequiresTooltip: false
+            })
         } else {
-            this.setState({selectedCardIndex: index})
+            const selectedCard = this.state.cards[index]
+            this.setState({
+                selectedCardIndex: index,
+                marblesToSelect: selectedCard.value === 'switch' ? 2 : 1,
+                // check if the card requires a tooltip
+                selectedCardRequiresTooltip: cardsRequiringTooltip.includes(selectedCard.value),
+            })
+            console.log('select' + this.state.marblesToSelect + 'marbles')
         }
 
         // TODO: Request valid moves from server and display them on the board
-    }
-
-    cardPlayed(index) {
-
     }
 
     stepClicked(index) {
@@ -96,11 +111,33 @@ class Game extends Component {
         // TODO: Request possible cards that can be played and mark them
     }
 
+    async homeClicked(index) {
+        if (this.state.selectedCardIndex !== null) {
+            console.log('homeClicked')
+            const selectedCard = this.state.cards[this.state.selectedCardIndex]
+            var relURL = 'games/' + this.props.gameID + '/action'
+            var responseJson = await postData(relURL, 
+                {
+                    player: this.props.player,
+                    action: {
+                        action: 0,
+                        card: selectedCard, 
+                        mid: 0
+                    }
+                })
+                console.log(responseJson)
+        } else {
+            // TODO
+        }
+    }
+
     async startGame() {
-        var responseJson = await postData('games/' + this.props.gameID + '/start', 
-                this.props.player
+        var relURL = 'games/' + this.props.gameID + '/start'
+        var responseJson = await postData(relURL, 
+                this.props.player,
             )
         if ('game_id' in responseJson) {
+            this.setState({gameStarted: true})
         } else {
             console.log(responseJson.detail)
         }
@@ -109,9 +146,16 @@ class Game extends Component {
     render() {
         return (
             <div className="game-container">
-                <Board playerList={this.state.players} marbleList={this.state.marbles}/>
+                <Board 
+                    playerList={this.state.players} 
+                    marbleList={this.state.marbles}
+                    selectedCardRequiresTooltip={this.state.selectedCardRequiresTooltip}
+                    stepClicked={this.stepClicked}
+                    homeClicked={this.homeClicked}
+                />
                 <div className="right-container">
                     <Controls 
+                        gameStarted={this.state.gameStarted}
                         cards={this.state.cards} 
                         cardClicked={this.cardClicked}
                         selectedCardIndex={this.state.selectedCardIndex}
