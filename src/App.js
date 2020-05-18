@@ -10,7 +10,7 @@ import Game from './components/game/Game'
 import { socket } from './socket'
 import { postData } from './paths'
 
-const DEBUG = true;
+import { DEBUG } from './config'
 
 class App extends Component {
   constructor() {
