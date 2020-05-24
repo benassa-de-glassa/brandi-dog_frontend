@@ -64,15 +64,15 @@ class App extends Component {
   async registerPlayer(player, errorCallback) {
     // sends player name to API_URL/player
     // returns {name: str, id: str}
-    const responseJson = await postData('player', {name: player})
-    if ('uid' in responseJson) {
+    const response = await postData('player', {name: player})
+    const responseJson = await response.json()
+    if (response.status === 200) {
       this.setState({
         playerLoggedIn: true,
         player: responseJson
       })
     } else {
-      console.log(responseJson.detail)
-      errorCallback(responseJson.detail)
+      console.log(response.status, responseJson)
     }
   }
 
