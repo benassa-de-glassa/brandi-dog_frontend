@@ -15,7 +15,8 @@ var GameViewer = function(props) {
     const [error, setError] = useState("")
 
     const updateGameList = async function() {
-        const responseJson = await get('games')
+        const response = await get('games')
+        const responseJson = await response.json()
         setGameList(responseJson)
     }
 
@@ -25,11 +26,12 @@ var GameViewer = function(props) {
         var relURL = 'games'
         if (DEBUG) { relURL += '?debug=true' }
 
-        const responseJson = await postData(relURL, {
+        const response = await postData(relURL, {
             player: props.player, 
             game_name: input
         })
-        if ('game_id' in responseJson) {
+        const responseJson = await response.json()
+        if (response.status === 200) {
             updateGameList()
             joinGame(responseJson.game_id)
             setCreateGame(false)
@@ -39,10 +41,11 @@ var GameViewer = function(props) {
     }
 
     const joinGame = async (gameID) => {
-        const responseJson = await postData('games/' + gameID + '/join', 
+        const response = await postData('games/' + gameID + '/join', 
             props.player
         )
-        if ('game_id' in responseJson) {
+        //const responseJson = await response.json()
+        if (response.status === 200) {
             socket.emit('join-game', 
                 {
                     player: props.player,
@@ -52,8 +55,12 @@ var GameViewer = function(props) {
             props.setGameID(gameID)
             setJoinedGame(gameID)
         } else {
-            console.log(responseJson.detail);
-            //'detail' in responseJson && setError(responseJson.detail)
+            try {
+                let responseJson = await response.json()
+                setError(responseJson.detail)
+            } catch (err) {
+                console.warn(err.message)
+            }
         }
         updateGameList()
     }
