@@ -59,6 +59,7 @@ class GlobalChat extends Component {
   render() {
     return (
       <div id='global-chat-container'>
+        <strong>Global chat</strong>
         <div id='global-message-box' className='message-box'>
         {this.state.messages.map( msg => {
           // color server messages differently
