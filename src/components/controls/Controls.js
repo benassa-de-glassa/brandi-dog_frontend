@@ -24,66 +24,75 @@ action_options values can be the following:
 */
 
 const possibleMoves = {
-  'A': 'Click on a marble to go out, click on a marble and its destination to move one or eleven',
-  '2': 'Click on a marble to move two.',
-  '3': 'Click on a marble to move three.',
-  '4': 'Click on a marble and its destination to move four forwards or backwards.', 
-  '5': 'Click on a marble to move five.',
-  '6': 'Click on a marble to move six.',
+  'A': 'Click on a marble to go out, or move either one or eleven steps.',
+  '2': 'Click on a marble to move two steps.',
+  '3': 'Click on a marble to move three steps.',
+  '4': 'Click on a marble and its destination to move four steps forwards or backwards.',
+  '5': 'Click on a marble to move five steps.',
+  '6': 'Click on a marble to move six steps.',
   '7': 'Click on a marble to move seven steps. Each step needs to be performed individually on your marbles.',
-  '8': 'Click on a marble to move eight.',
-  '9': 'Click on a marble to move nine.',
-  '10': 'Click on a marble to move ten.',
+  '8': 'Click on a marble to move eight steps.',
+  '9': 'Click on a marble to move nine steps.',
+  '10': 'Click on a marble to move ten steps.',
   'Ja': 'Choose an arbitrary marble to switch with one of yours. You cannot exchange locked marbles.',
-  'Q': 'Move 12.',
-  'K': 'Click on a marble to move 13 or go out.',
-  'Jo': 'Not implemented yet, the joker can imitate any card.'
+  'Q': 'Click on a marble to move 12 steps.',
+  'K': 'Click on a marble to go out, or move 13 steps.',
+  'Jo': 'Choose a card that the joker imitates.'
 }
 
 function Controls(props) {
 
-  var selectedCardString, possibleMoveString
+  // var selectedCardString, 
+  var possibleMoveString
 
   if (props.selectedCard !== undefined) {
-    selectedCardString = props.selectedCard.color + '' + props.selectedCard.value
+    // selectedCardString = props.selectedCard.color + '' + props.selectedCard.value
     possibleMoveString = possibleMoves[props.selectedCard.value]
   } else {
-    selectedCardString = ''
+    // selectedCardString = ''
     possibleMoveString = ''
   }
-
 
   var handleClick = event => {
     event.preventDefault()
     props.startGame()
   }
 
-  var chooseAction =event => {
-    props.getAction(event.target.id)
+  var chooseAction = event => {
+    props.setAction(event.target.id)
   }
 
   return (
     <div className="controls-box">
-      <div className="instruction-box"> 
-      { !props.gameStarted &&
-        <button onClick={handleClick}> Start game </button>
-      }
+      <div className="instruction-box">
+        {!props.gameStarted &&
+          <button onClick={handleClick}> Start game </button>
+        }
       </div>
 
       <div className="instruction-box">
-        <p className="instruction-text">{possibleMoveString}</p>
-        {props.selectedCard !== undefined && props.selectedCard.actions.length > 1 && props.cards[props.selectedCardIndex].actions.map(action => 
-          <button id={action} key={action} onClick={(event) => chooseAction(event)} > {action} </button>)}
+        {props.roundState === 2
+          ? <p className="instruction-text">click on a card to swap.</p>
+          : <p className="instruction-text">{possibleMoveString}</p>
+        }
       </div>
-      <Hand 
-          cards={props.cards} 
-          cardClicked={props.cardClicked} 
-          selectedCardIndex={props.selectedCardIndex}
+      <Hand
+        cards={props.cards}
+        cardClicked={props.cardClicked}
+        selectedCardIndex={props.selectedCardIndex}
       />
-      
+      {props.selectedCardIndex !== null && props.selectedCard.actions.length > 1 && props.cards[props.selectedCardIndex].actions.map(action =>
+        <button id={action} key={action} onClick={(event) => chooseAction(event)} > {action} </button>)
+      }
+      {props.roundState === 2 &&
+        <button className='button'
+          onClick={props.swapCard}
+          disabled={props.selectedCardIndex === null}>
+          Confirm
+        </button>
+      }
     </div>
-    )
+  )
 }
-  
+
 export default Controls;
-  
