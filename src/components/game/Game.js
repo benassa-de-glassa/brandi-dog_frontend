@@ -18,7 +18,6 @@ class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameStarted: false,
             players: ['', '', '', ''],
             activePlayerIndex: null,
             marbles: [],    // player marbles
@@ -109,8 +108,6 @@ class Game extends Component {
             })
             console.log('select' + this.state.marblesToSelect + 'marbles')
         }
-
-        // TODO: Request valid moves from server and display them on the board
     }
 
     async swapCard() {
@@ -152,6 +149,10 @@ class Game extends Component {
                 // possible action
                 this.performAction(marble, selectedCard, possibleActions[0])
                 // this.setState({ selectedAction: selectedCard.actions[0] })
+            } else if (selectedCard.value === 'Jo') {
+                // handle Joker
+                this.performAction(marble, selectedCard, this.state.selectedAction)
+                this.setState({ selectedAction: null })
             } else {
                 // clicked on a marble on the field for which multiple actions
                 // are possible
@@ -203,7 +204,6 @@ class Game extends Component {
         )
         const responseJson = await response.json()
         if (response.status === 200) {
-            this.setState({ gameStarted: true })
         } else {
             console.log(responseJson)
         }
@@ -225,7 +225,7 @@ class Game extends Component {
                 />
                 <div className="right-container">
                     <Controls
-                        gameStarted={this.state.gameStarted}
+                        gameState={this.state.gameState}
                         cards={this.state.cards}
                         cardClicked={this.cardClicked}
                         selectedCardIndex={this.state.selectedCardIndex}
@@ -233,6 +233,7 @@ class Game extends Component {
                         startGame={this.startGame}
                         possibleMoves={this.state.possibleMoves}
                         setAction={this.setAction}
+                        selectedAction={this.selectedAction}
                         roundState={this.state.roundState}
                         swapCard={this.swapCard}
                     />

@@ -98,7 +98,7 @@ var GameViewer = function(props) {
             { }
             <input type='button' className="mr-auto" 
                     onClick={() => joinGame(gameList[selectedRow].game_id)} 
-                    value='Join' disabled={selectedRow === undefined || joinedGame}/>
+                    value='Join' disabled={!props.playerLoggedIn || selectedRow === undefined || joinedGame}/>
             <input type='button' className="mr-auto" 
                     onClick={() => alert('not implemented yet. complain on github')} 
                     value='Leave' disabled={!joinedGame}/>

@@ -58,14 +58,10 @@ function Controls(props) {
     props.startGame()
   }
 
-  var chooseAction = event => {
-    props.setAction(event.target.id)
-  }
-
   return (
     <div className="controls-box">
       <div className="instruction-box">
-        {!props.gameStarted &&
+        {props.gameState < 2 &&
           <button onClick={handleClick}> Start game </button>
         }
       </div>
@@ -81,8 +77,10 @@ function Controls(props) {
         cardClicked={props.cardClicked}
         selectedCardIndex={props.selectedCardIndex}
       />
-      {props.selectedCardIndex !== null && props.selectedCard.actions.length > 1 && props.cards[props.selectedCardIndex].actions.map(action =>
-        <button id={action} key={action} onClick={(event) => chooseAction(event)} > {action} </button>)
+      {props.selectedCard && props.selectedCard.value === 'Jo' && props.selectedCard.actions.map(action =>
+        <button id={action} key={action} 
+        style={action === props.selectedAction ? {'background-color': 'red'} : {}}
+        onClick={() => props.setAction(action)}> {action} </button>)
       }
       {props.roundState === 2 &&
         <button className='button'
