@@ -12,11 +12,17 @@ export var postData = async function(relURL = '', data = {}) {
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify(data)
     })
-    return response.json()
+    if (response.status !== 200) {
+        console.warn(response.status, ' for POST ', relURL)
+    }
+    return response
 }
 
 export var get = async function(relURL = '') {
     let url = new URL(relURL, API_URL)
     const response = await fetch(url)
-    return response.json()
+    if (response.status !== 200) {
+        console.warn(response.status, ' for GET ', relURL)
+    }
+    return response
 }
