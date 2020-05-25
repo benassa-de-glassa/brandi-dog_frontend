@@ -1,3 +1,7 @@
+## Brändi Dog Online!
+
+back end: https://github.com/benassa-de-glassa/brandi-dog_backend
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
