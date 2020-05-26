@@ -20,25 +20,30 @@ class Game extends Component {
         this.state = {
             players: ['', '', '', ''],
             activePlayerIndex: null,
+            playerIsActive: false,
             marbles: [],    // player marbles
             cards: [],      // player cards
             selectedCardIndex: null,
             selectedAction: null,
             selectedMarble: null,
             tooltipActions: [],
-            marblesToSelect: 0, // 2 for the Jack (switch), 1 otherwise
+            marbleToSwitch: null,
             gameState: null,    // see backend for numbers
             roundState: null,   // see backend for numbers
             topCard: null,
+            cardSwapConfirmed: false,
+            jokerAction: 0,     // only relevant if a joker is being played
+            errorMessage: '',
         }
         this.handleNewGameState = this.handleNewGameState.bind(this)
         this.handleNewPlayerState = this.handleNewPlayerState.bind(this)
         this.startGame = this.startGame.bind(this)
-        this.setAction = this.setAction.bind(this)
         this.cardClicked = this.cardClicked.bind(this)
         this.marbleClicked = this.marbleClicked.bind(this)
         this.tooltipClicked = this.tooltipClicked.bind(this)
         this.swapCard = this.swapCard.bind(this)
+        this.fold = this.fold.bind(this)
+        this.setJokerAction = this.setJokerAction.bind(this)
     }
 
 
@@ -53,6 +58,9 @@ class Game extends Component {
     }
 
     handleNewGameState(data) {
+        if (data.round_state === 5) {
+            this.setState({ cardSwapConfirmed: false })
+        }
         const players = data.order.map(uid => data.players[uid])
         var marbles = []
         data.order.forEach(uid => {
@@ -66,7 +74,8 @@ class Game extends Component {
                 gameState: data.game_state,
                 roundState: data.round_state,
                 activePlayerIndex: data.active_player_index,
-                topCard: data.top_card
+                topCard: data.top_card,
+                playerIsActive: players[data.active_player_index].uid === this.props.player.uid
             })
         )
     }
@@ -122,14 +131,24 @@ class Game extends Component {
         const responseJson = await response.json()
         console.log(responseJson)
         if (response.status === 200) {
+            this.setState({ cardSwapConfirmed: true })
         }
     }
 
-    setAction(val) {
-        this.setState({ selectedAction: val })
+    async fold() {
+        const relURL = 'games/' + this.props.gameID + '/fold'
+        const response = await postData(relURL, this.props.player)
+        const responseJson = await response.json()
+        if (response.status !== 200) {
+            console.log(responseJson)
+        }
     }
 
-    marbleClicked(marble, homeClicked=false) {
+    setJokerAction(val) {
+        this.setState({ jokerAction: val })
+    }
+
+    marbleClicked(marble, homeClicked = false) {
         this.setState({ selectedMarble: marble })
         if (this.state.selectedCardIndex !== null) {
             let selectedCard = this.state.cards[this.state.selectedCardIndex]
@@ -137,32 +156,54 @@ class Game extends Component {
                 // (try) to go out
                 this.performAction(marble, selectedCard, 0)
                 return
-            } 
+            }
             // home is not clicked
             let possibleActions = selectedCard.actions
             if (selectedCard.actions.includes(0)) {
                 // remove the 0 from the options to see if a tooltip is needed
-                possibleActions = selectedCard.actions.filter( action => action !== 0)
+                possibleActions = selectedCard.actions.filter(action => action !== 0)
             }
-            if (possibleActions.length === 1) {
+            if (selectedCard.value === 'Ja') {
+                // handle jack (switch)
+                if (this.state.marbleToSwitch === null) {
+                    // no other marble has been selected
+                    this.setState({ marbleToSwitch: marble })
+
+                // check that one of my own and one not of my own is selected
+                } else if ( // the marble that clicked last is my own
+                    marble.color === this.state.marbles[0].color && this.state.marbleToSwitch !== this.state.marbleToSwitch
+                ) { // marbleToSwitch is my own marble and the one clicked last is not
+                    this.performSwitch(this.state.marbleToSwitch, marble)
+                } else if (
+                    marble.color !== this.state.marbles[0].color && this.state.marbleToSwitch === this.state.marbleToSwitch
+                ) {
+                    // marbleToSwitch is not my own marble and the one clicked last is my own
+                    this.performSwitch(marble, this.state.marbleToSwitch)
+                } else {
+                    this.setState({ 
+                        marbleToSwitch: null,
+                        errorMessage: 'Choose one of your marbles, and one from another player.' 
+                    })
+                }
+            } else if (possibleActions.length === 1) {
                 // clicked on a marble on the field while a card with only one 
                 // possible action
                 this.performAction(marble, selectedCard, possibleActions[0])
                 // this.setState({ selectedAction: selectedCard.actions[0] })
             } else if (selectedCard.value === 'Jo') {
                 // handle Joker
-                this.performAction(marble, selectedCard, this.state.selectedAction)
+                this.performAction(marble, selectedCard, this.state.jokerAction)
                 this.setState({ selectedAction: null })
             } else {
                 // clicked on a marble on the field for which multiple actions
                 // are possible
-                this.setState({ 
+                this.setState({
                     tooltipActions: possibleActions,
                     selectedMarble: marble
                 })
             }
         } else {
-        // TODO
+            // TODO
         }
     }
 
@@ -189,12 +230,30 @@ class Game extends Component {
                 selectedCardIndex: null,
                 selectedAction: null,
                 tooltipActions: [],
-                marblesToSelect: 0,
             })
         } else {
             console.log(responseJson)
         }
-        
+    }
+
+    async performSwitch(ownMarble, otherMarble, card) {
+        const relURL = 'games/' + this.props.gameID + '/action'
+        const response = await postData(relURL, 
+            {
+                player: this.props.player,
+                action: {
+                    card: card,
+                    action: 'switch',
+                    mid: ownMarble.mid,
+                    mid_2: otherMarble.mid
+                }
+            })
+        const responseJson = await response.json()
+        if (response.status === 200) {
+            this.setState({ marbleToSwitch: null })
+        } else {
+            console.log(responseJson)
+        }
     }
 
     async startGame() {
@@ -213,6 +272,7 @@ class Game extends Component {
         return (
             <div className="game-container">
                 <Board
+                    player={this.props.player}
                     playerList={this.state.players}
                     activePlayerIndex={this.state.activePlayerIndex}
                     marbleList={this.state.marbles}
@@ -225,17 +285,20 @@ class Game extends Component {
                 />
                 <div className="right-container">
                     <Controls
+                        playerIsActive={this.state.playerIsActive}
                         gameState={this.state.gameState}
+                        roundState={this.state.roundState}
                         cards={this.state.cards}
                         cardClicked={this.cardClicked}
                         selectedCardIndex={this.state.selectedCardIndex}
                         selectedCard={this.state.cards[this.state.selectedCardIndex]}
                         startGame={this.startGame}
                         possibleMoves={this.state.possibleMoves}
-                        setAction={this.setAction}
-                        selectedAction={this.selectedAction}
-                        roundState={this.state.roundState}
+                        setJokerAction={this.setJokerAction}
+                        jokerAction={this.state.jokerAction}
                         swapCard={this.swapCard}
+                        fold={this.fold}
+                        cardSwapConfirmed={this.state.cardSwapConfirmed}
                     />
                     <Chat player={this.props.player} />
                 </div>
