@@ -180,7 +180,10 @@ class Game extends Component {
                     // marbleToSwitch is not my own marble and the one clicked last is my own
                     this.performSwitch(marble, this.state.marbleToSwitch)
                 } else {
-                    this.setState({ errorMessage: 'Choose one of your marbles, and one from another player.' })
+                    this.setState({ 
+                        marbleToSwitch: null,
+                        errorMessage: 'Choose one of your marbles, and one from another player.' 
+                    })
                 }
             } else if (possibleActions.length === 1) {
                 // clicked on a marble on the field while a card with only one 
@@ -245,9 +248,11 @@ class Game extends Component {
                     mid_2: otherMarble.mid
                 }
             })
-        const reponseJson = await response.json()
+        const responseJson = await response.json()
         if (response.status === 200) {
             this.setState({ marbleToSwitch: null })
+        } else {
+            console.log(responseJson)
         }
     }
 
@@ -267,6 +272,7 @@ class Game extends Component {
         return (
             <div className="game-container">
                 <Board
+                    player={this.props.player}
                     playerList={this.state.players}
                     activePlayerIndex={this.state.activePlayerIndex}
                     marbleList={this.state.marbles}
