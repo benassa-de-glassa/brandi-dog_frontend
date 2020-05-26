@@ -5,7 +5,7 @@ import { get, postData } from '../../paths'
 
 import { DEBUG } from '../../config'
 
-var GameViewer = function(props) {
+var GameViewer = function (props) {
     // use hooks because cooler!?
     const [gameList, setGameList] = useState([])
     const [createGame, setCreateGame] = useState(false)
@@ -14,7 +14,7 @@ var GameViewer = function(props) {
     const [joinedGame, setJoinedGame] = useState(false)
     const [error, setError] = useState("")
 
-    const updateGameList = async function() {
+    const updateGameList = async function () {
         const response = await get('games')
         const responseJson = await response.json()
         setGameList(responseJson)
@@ -27,7 +27,7 @@ var GameViewer = function(props) {
         if (DEBUG) { relURL += '?debug=true' }
 
         const response = await postData(relURL, {
-            player: props.player, 
+            player: props.player,
             game_name: input
         })
         const responseJson = await response.json()
@@ -41,12 +41,12 @@ var GameViewer = function(props) {
     }
 
     const joinGame = async (gameID) => {
-        const response = await postData('games/' + gameID + '/join', 
+        const response = await postData('games/' + gameID + '/join',
             props.player
         )
         //const responseJson = await response.json()
         if (response.status === 200) {
-            socket.emit('join-game', 
+            socket.emit('join-game',
                 {
                     player: props.player,
                     game_id: gameID
@@ -70,10 +70,10 @@ var GameViewer = function(props) {
         updateGameList()
     }, [])
 
-    return(
+    return (
         <div id="game-viewer">
-            <strong>Game List</strong>
-            { error && 
+            <strong className='mb-1'>Game List</strong>
+            {error &&
                 <p className='error'>{error}</p>
             }
             <table id="game-list-table">
@@ -85,37 +85,37 @@ var GameViewer = function(props) {
                     </tr>
                 </thead>
                 <tbody>
-                {gameList.map( (game, index) => 
-                    <tr key={game.game_name} onClick={() => setSelectRow(index)} 
+                    {gameList.map((game, index) =>
+                        <tr key={game.game_name} onClick={() => setSelectRow(index)}
                             className={(index === selectedRow ? "selected-row " : "") + (game.game_id === joinedGame ? 'joined-row' : "")}>
-                        <td>{game.game_name}</td>
-                        <td>{game.host.name}</td>
-                        <td>{Object.values(game.players).map(player => player.name).join(', ')}</td>
-                    </tr>
-                )}
+                            <td>{game.game_name}</td>
+                            <td>{game.host.name}</td>
+                            <td>{Object.values(game.players).map(player => player.name).join(', ')}</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
-            { }
-            <input type='button' className="mr-auto" 
-                    onClick={() => joinGame(gameList[selectedRow].game_id)} 
-                    value='Join' disabled={!props.playerLoggedIn || selectedRow === undefined || joinedGame}/>
-            <input type='button' className="mr-auto" 
-                    onClick={() => alert('not implemented yet. complain on github')} 
-                    value='Leave' disabled={!joinedGame}/>
-            <input type='button' onClick={updateGameList} value='Update'/>
-            <input type='button' onClick={() => setCreateGame(true)} value='New Lobby' disabled={joinedGame || !props.playerLoggedIn}/>
+            {}
+            <input type='button' className="mr-auto"
+                onClick={() => joinGame(gameList[selectedRow].game_id)}
+                value='Join' disabled={!props.playerLoggedIn || selectedRow === undefined || joinedGame} />
+            <input type='button' className="mr-auto"
+                onClick={() => alert('not implemented yet. complain on github')}
+                value='Leave' disabled={!joinedGame} />
+            <input type='button' onClick={updateGameList} value='Update' />
+            <input type='button' onClick={() => setCreateGame(true)} value='New Lobby' disabled={joinedGame || !props.playerLoggedIn} />
             {
-                createGame && 
+                createGame &&
                 <form className='ml-auto mr-2' onSubmit={handleCreateGameSubmit}>
                     <label className='mr-1'>
-                    Enter a name: </label>
+                        Enter a name: </label>
                     <input type='text' className='mr-1' value={input} onChange=
-                {handleCreateGameInput} placeholder='Enter game name'/>
-                    
+                        {handleCreateGameInput} placeholder='Enter game name' />
+
                     <input type='submit' value='Create Game' />
                 </form>
             }
-            
+
         </div>
     )
 }

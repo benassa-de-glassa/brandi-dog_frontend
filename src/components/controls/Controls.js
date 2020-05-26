@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import Hand from './Hand'
 import './controls.css'
@@ -41,7 +41,6 @@ const possibleMoves = {
 }
 
 function Controls(props) {
-
   // var selectedCardString, 
   var possibleMoveString
 
@@ -77,16 +76,26 @@ function Controls(props) {
         cardClicked={props.cardClicked}
         selectedCardIndex={props.selectedCardIndex}
       />
-      {props.selectedCard && props.selectedCard.value === 'Jo' && props.selectedCard.actions.map(action =>
-        <button id={action} key={action} 
-        style={action === props.selectedAction ? {'background-color': 'red'} : {}}
-        onClick={() => props.setAction(action)}> {action} </button>)
-      }
+      
+      {props.selectedCard && props.selectedCard.value === 'Jo' && 
+        <select onChange={event => props.setJokerAction(event.target.value)}>
+          {props.selectedCard.actions.map(action =>
+            <option value={action}>{action}</option>
+          )}
+        </select>
+      } 
       {props.roundState === 2 &&
         <button className='button'
           onClick={props.swapCard}
-          disabled={props.selectedCardIndex === null}>
+          disabled={props.selectedCardIndex === null || props.cardSwapConfirmed}>
           Confirm
+        </button>
+      }
+      { props.playerIsActive && props.roundState === 4 && 
+      // allows the player to fold if it's his turn and the cards have been exchanged
+        <button className='button'
+          onClick={props.fold}>
+          Fold
         </button>
       }
     </div>
