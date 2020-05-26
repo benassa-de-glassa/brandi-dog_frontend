@@ -4,13 +4,13 @@ import { socket } from '../../socket'
 // import { get, postData } from '../../paths'
 
 class GlobalChat extends Component {
-    constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
       textValue: "",
       messages: [
-        {sender: 'server', time: 'now10', text: 'Welcome to Boomer Dog'},
-        {sender: 'bene', time: 'later3', text: 'geh mal bier holn'}
+        { sender: 'server', time: '', text: 'Welcome to Boomer Dog' },
+        { sender: 'bene', time: 'halb vier', text: 'geh mal bier holn' }
       ],
     }
     this.handleChange = this.handleChange.bind(this)
@@ -20,7 +20,7 @@ class GlobalChat extends Component {
   }
 
   handleChange(event) {
-    this.setState({textValue: event.target.value});  
+    this.setState({ textValue: event.target.value });
   }
 
   handleClick() {
@@ -28,11 +28,11 @@ class GlobalChat extends Component {
       sender: this.props.player.name,
       text: this.state.textValue
     })
-    this.setState({textValue: ''})
+    this.setState({ textValue: '' })
   }
 
   onEnterKey(event) {
-    if (event.key === 'Enter' && event.shiftKey === false ) {
+    if (event.key === 'Enter' && event.shiftKey === false) {
       this.handleClick()
     }
   }
@@ -50,7 +50,7 @@ class GlobalChat extends Component {
   }
 
   addMessage(data) {
-    this.setState( prevState => ({
+    this.setState(prevState => ({
       messages: [...prevState.messages, data]
     }))
     console.log(this.state.messages)
@@ -61,46 +61,46 @@ class GlobalChat extends Component {
       <div id='global-chat-container'>
         <strong>Global chat</strong>
         <div id='global-message-box' className='message-box'>
-        {this.state.messages.map( msg => {
-          // color server messages differently
-          if (msg.sender === 'server') {
-            return(
-              <div className="message server-message" key={msg.time}>
-                <div className="message-text">
-                  <span className="mr-auto">{msg.text}
-                  </span><span className="float-right">{msg.time}
-                  </span>
+          {this.state.messages.map(msg => {
+            // color server messages differently
+            if (msg.sender === 'server') {
+              return (
+                <div className="message server-message" key={msg.time}>
+                  <div className="message-text">
+                    <span className="mr-auto">{msg.text}
+                    </span><span className="float-right">{msg.time}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            )
-          } else {
-            return(
-              <div className="message" key={msg.time}>
-                <div className="message-text">
-                  <p className="message-text"><span><strong>{msg.sender}</strong></span><span className="float-right">{msg.time}</span></p>
-                  <p className="message-text">{msg.text}</p>
+              )
+            } else {
+              return (
+                <div className="message" key={msg.time}>
+                  <div className="message-text">
+                    <p className="message-text"><span><strong>{msg.sender}</strong></span><span className="float-right">{msg.time}</span></p>
+                    <p className="message-text">{msg.text}</p>
+                  </div>
                 </div>
-              </div>
-            )
-          }
-        })}
+              )
+            }
+          })}
         </div>
         <div id='global-chat-editor'>
           <form>
-            <textarea 
+            <textarea
               className="text-box"
               value={this.state.textValue}
               onChange={this.handleChange}
               onKeyUp={this.onEnterKey}
-              rows="2" 
+              rows="2"
               placeholder={this.props.playerLoggedIn ? "Type your message here..." : "Log in to send message."}
               disabled={!this.props.playerLoggedIn}>
             </textarea>
-            <input type="button" onClick={this.handleClick} value="Send" disabled={!this.props.playerLoggedIn}/>
+            <input type="button" onClick={this.handleClick} value="Send" disabled={!this.props.playerLoggedIn} />
           </form>
         </div>
       </div>
-      )
+    )
   }
 }
 
