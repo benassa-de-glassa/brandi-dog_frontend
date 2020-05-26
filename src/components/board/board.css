@@ -124,10 +124,6 @@ button.close:hover {
     stroke: yellow;
 }
 
-.card-blue {
-    fill: skyblue
-}
-
 .card-number {
     font-size: 40px;
 }
@@ -135,4 +131,5 @@ button.close:hover {
 .card-path {
     stroke: black;
     stroke-width: 3px;
+    fill: whitesmoke;
 }
