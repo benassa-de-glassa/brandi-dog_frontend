@@ -1,0 +1,55 @@
+.controls-box {
+    overflow: auto;
+}
+
+.instruction-box {
+    margin: 10px 30px;
+}
+
+.instruction-text {
+    margin: 0px;
+}
+
+.hand {
+    margin: 20px;
+    height: 200px;
+}
+
+
+.card {
+    position: relative;
+    top: 30px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin-right: -35px;
+    width: 90px;
+    height: 150px;
+    border-radius: 10px;
+    background: whitesmoke;
+    border: 3px solid black;
+}
+
+.card-selected {
+    top: 20px;
+    border: 3px solid grey;
+    z-index: 99;
+}
+
+.card:hover {
+    top: 20px;
+    z-index: 100;
+}
+
+.card-value {
+    font-size: 40px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.card-color {
+    font-size: 40px;
+    position: absolute;
+    top: 40px;
+    left: 30px;
+}
