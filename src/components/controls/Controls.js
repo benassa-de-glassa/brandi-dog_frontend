@@ -77,7 +77,8 @@ function Controls(props) {
         selectedCardIndex={props.selectedCardIndex}
       />
       
-      {props.selectedCard && props.selectedCard.value === 'Jo' && 
+      {props.selectedCard && props.selectedCard.value === 'Jo' && props.roundState !== 2 &&
+        // joker is selected, and it's not to be swapped at the beginning of a round
         <select onChange={event => props.setJokerAction(event.target.value)}>
           {props.selectedCard.actions.map(action =>
             <option value={action}>{action}</option>

@@ -1,6 +1,10 @@
 // to run it from local API
-export const API_URL = "https://boomer-backend.herokuapp.com/v1/"
-export const SIO_URL = "https://boomer-backend.herokuapp.com"
+//export const API_URL = "http://localhost:8000/v1/"
+//export const SIO_URL = "http://localhost:8000"
+
+export const API_URL ="https://boomer-backend.herokuapp.com/v1/"
+export const SIO_URL ="https://boomer-backend.herokuapp.com/"
+
 
 // export const WS_URL = "ws://localhost:8000/"
 

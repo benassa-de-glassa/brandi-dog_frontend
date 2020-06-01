@@ -7,18 +7,13 @@ import Controls from '../controls/Controls'
 import { socket } from '../../socket'
 import { postData } from '../../paths'
 
-// if switch is selected need to send two marble ids and a player id
-
-// array of cards that require a tooltip popup. For example, after playing
-// '4', the player can choose to move forward or backward
-// TODO: Joker
-// const cardsRequiringTooltip = ['A', '4', '7', 'Ja', 'Jo']
 
 class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
             players: ['', '', '', ''],
+            allMarbles: [],
             activePlayerIndex: null,
             playerIsActive: false,
             marbles: [],    // player marbles
@@ -70,7 +65,7 @@ class Game extends Component {
             ({
                 ...prevState,
                 players: players,
-                marbles: marbles,
+                allMarbles: marbles,
                 gameState: data.game_state,
                 roundState: data.round_state,
                 activePlayerIndex: data.active_player_index,
@@ -81,7 +76,10 @@ class Game extends Component {
     }
 
     handleNewPlayerState(data) {
-        this.setState({ cards: data.hand })
+        this.setState({ 
+            cards: data.hand,
+            marbles: data.marbles
+        })
     }
 
     componentDidMount() {
@@ -164,27 +162,33 @@ class Game extends Component {
                 possibleActions = selectedCard.actions.filter(action => action !== 0)
             }
             if (selectedCard.value === 'Ja') {
+                let myColor = this.state.marbles[0].color
+                console.log(myColor)
                 // handle jack (switch)
                 if (this.state.marbleToSwitch === null) {
                     // no other marble has been selected
                     this.setState({ marbleToSwitch: marble })
+                    console.debug('marble selected', marble)
 
-                // check that one of my own and one not of my own is selected
-                } else if ( // the marble that clicked last is my own
-                    marble.color === this.state.marbles[0].color && this.state.marbleToSwitch !== this.state.marbleToSwitch
-                ) { // marbleToSwitch is my own marble and the one clicked last is not
-                    this.performSwitch(this.state.marbleToSwitch, marble)
-                } else if (
-                    marble.color !== this.state.marbles[0].color && this.state.marbleToSwitch === this.state.marbleToSwitch
-                ) {
-                    // marbleToSwitch is not my own marble and the one clicked last is my own
-                    this.performSwitch(marble, this.state.marbleToSwitch)
+                    // check that one of my own and one not of my own is selected
+                } else if (marble.color === myColor && this.state.marbleToSwitch.color !== myColor) {
+                    // my own marble clicked second
+                    this.performSwitch(selectedCard, marble, this.state.marbleToSwitch)
+                } else if (marble.color !== myColor && this.state.marbleToSwitch.color === myColor) {
+                    // other marble clicked second
+                    this.performSwitch(selectedCard, this.state.marbleToSwitch, marble)
                 } else {
-                    this.setState({ 
+                    console.debug('couldnt swap', marble, this.state.marbleToSwitch)
+                    this.setState({
                         marbleToSwitch: null,
-                        errorMessage: 'Choose one of your marbles, and one from another player.' 
+                        errorMessage: 'Choose one of your marbles, and one from another player.'
                     })
                 }
+            } else if (selectedCard.value === '7') {
+                this.setState({
+                    tooltipActions: [1, 2, 3, 4, 5, 6, 7],
+                    selectedMarble: marble
+                })
             } else if (possibleActions.length === 1) {
                 // clicked on a marble on the field while a card with only one 
                 // possible action
@@ -236,9 +240,12 @@ class Game extends Component {
         }
     }
 
-    async performSwitch(ownMarble, otherMarble, card) {
+    async performSwitch(card, ownMarble, otherMarble) {
+        // reset stored marble in case of errors
+        this.setState({ marbleToSwitch: null })
+
         const relURL = 'games/' + this.props.gameID + '/action'
-        const response = await postData(relURL, 
+        const response = await postData(relURL,
             {
                 player: this.props.player,
                 action: {
@@ -250,7 +257,6 @@ class Game extends Component {
             })
         const responseJson = await response.json()
         if (response.status === 200) {
-            this.setState({ marbleToSwitch: null })
         } else {
             console.log(responseJson)
         }
@@ -275,7 +281,7 @@ class Game extends Component {
                     player={this.props.player}
                     playerList={this.state.players}
                     activePlayerIndex={this.state.activePlayerIndex}
-                    marbleList={this.state.marbles}
+                    marbleList={this.state.allMarbles}
                     selectedMarble={this.state.selectedMarble}
                     tooltipActions={this.state.tooltipActions}
                     tooltipClicked={this.tooltipClicked}

@@ -1,5 +1,12 @@
 import React from 'react'
 
+const color2unicode = {
+  spades: '\u2660',
+  hearts: '\u2665',
+  diamonds: '\u2666',
+  clubs: '\u2663'
+}
+
 function Hand(props) {
   return (
     <div className="hand">
@@ -9,7 +16,8 @@ function Hand(props) {
           className={ (index === props.selectedCardIndex) ? "card card-selected" : "card" }
           onClick={ () => props.cardClicked(index) }
         >
-          <h3 className="card-value">{card.value}</h3>
+          <span className="card-value">{card.value}</span>
+          <span className='card-color'>{color2unicode[card.color]}</span>
         </div>
       )}
     </div>

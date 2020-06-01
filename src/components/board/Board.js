@@ -90,7 +90,9 @@ function Board(props) {
               width="90%" height="20%" style={{ stroke: "red" }}
               onClick={() => playerBoxClicked(0)}
             />
-            <text x="10%" y="20%" className="player-name">{playerList[0].name}</text>
+            <text x="10%" y="20%" className="player-name">
+              {playerList[0].uid === props.player.uid ? '\u265F' + playerList[0].name : playerList[0].name}
+            </text>
           </g>
         </svg>
         {/* top left player */}
@@ -99,34 +101,40 @@ function Board(props) {
             <rect
               className={props.activePlayerIndex === 1 ? 'player-box active' : 'player-box'}
               x="5%" y="5%"
-              width="90%" height="20%" style={{ stroke: "blue" }}
+              width="90%" height="20%" style={{ stroke: "yellow" }}
               onClick={() => playerBoxClicked(1)}
             />
-            <text className="player-name" x="10%" y="20%" >{playerList[1].name}</text>
+            <text className="player-name" x="10%" y="20%" >
+              {playerList[1].uid === props.player.uid ? '\u265F' + playerList[1].name : playerList[1].name}
+            </text>
           </g>
         </svg>
         {/* bottom left player */}
-        <svg x="80%" y="80%" height="20%" width="20%">
-          <g transform={"rotate(-45 " + 0.2 * 0.05 * width + " " + 0.2 * 0.75 * height + ")"}>
-            <rect
-              className={props.activePlayerIndex === 2 ? 'player-box active' : 'player-box'}
-              x="5%" y="75%"
-              width="90%" height="20%" style={{ stroke: "yellow" }}
-              onClick={() => playerBoxClicked(2)}
-            />
-            <text x="10%" y="90%" className="player-name">{playerList[2].name}</text>
-          </g>
-        </svg>
-        {/* bottom right player */}
         <svg x="0%" y="80%" height="20%" width="20%">
           <g transform={"rotate(45 " + 0.2 * 0.95 * width + " " + 0.2 * 0.75 * height + ")"}>
             <rect
-              className={props.activePlayerIndex === 3 ? 'player-box active' : 'player-box'}
+              className={props.activePlayerIndex === 2 ? 'player-box active' : 'player-box'}
               x="5%" y="75%"
               width="90%" height="20%" style={{ stroke: "green" }}
+              onClick={() => playerBoxClicked(2)}
+            />
+            <text x="10%" y="90%" className="player-name">
+              {playerList[2].uid === props.player.uid ? '\u265F' + playerList[2].name : playerList[2].name}  
+            </text>
+          </g>
+        </svg>        
+        {/* bottom right player */}
+        <svg x="80%" y="80%" height="20%" width="20%">
+          <g transform={"rotate(-45 " + 0.2 * 0.05 * width + " " + 0.2 * 0.75 * height + ")"}>
+            <rect
+              className={props.activePlayerIndex === 3 ? 'player-box active' : 'player-box'}
+              x="5%" y="75%"
+              width="90%" height="20%" style={{ stroke: "blue" }}
               onClick={() => playerBoxClicked(3)}
             />
-            <text x="10%" y="90%" className="player-name">{playerList[3].name}</text>
+            <text x="10%" y="90%" className="player-name">
+              {playerList[3].uid === props.player.uid ? '\u265F' + playerList[3].name : playerList[3].name}
+            </text>
           </g>
         </svg>
         {/* build steps for the path around the board */}
