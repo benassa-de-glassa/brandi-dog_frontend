@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import './mycss.css'
@@ -16,14 +16,14 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      socketConnected: false,
-      playerLoggedIn: false,
-      showMenu: true,
+      socketConnected: false,   // connection to socket.io of the backend
+      playerLoggedIn: false,    // player has signed in with a name
+      showMenu: true,           // top menu containing global chat and lobbies
       player: {
-        name: "", 
-        uid: undefined
+        name: "",
+        uid: null
       },
-      gameID: undefined
+      gameID: null              // currently joined game
     }
 
     this.toggleMenu = this.toggleMenu.bind(this)
@@ -49,22 +49,23 @@ class App extends Component {
     this.startSocketIO()
 
     if (DEBUG) {
-      this.registerPlayer('testName', () => {})
+      // register automatically as testName
+      this.registerPlayer('testName', () => { })
     }
   }
 
   toggleMenu() {
-    this.setState({showMenu: !this.state.showMenu})
+    this.setState({ showMenu: !this.state.showMenu })
   }
 
   setGameID(gameID) {
-    this.setState({gameID: gameID})
+    this.setState({ gameID: gameID })
   }
 
   async registerPlayer(player, errorCallback) {
     // sends player name to API_URL/player
-    // returns {name: str, id: str}
-    const response = await postData('player', {name: player})
+    // expects { name: str, id: str } in return
+    const response = await postData('player', { name: player })
     const responseJson = await response.json()
     if (response.status === 200) {
       this.setState({
@@ -72,42 +73,48 @@ class App extends Component {
         player: responseJson
       })
     } else {
-      console.log(response.status, responseJson)
+      console.debug(response.status, responseJson)
+      try {
+        errorCallback(responseJson.detail)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
   playerQuit() {
     this.setState({
       playerLoggedIn: false,
-      player: {name: "", uid: undefined}
+      player: { name: "", uid: null },
+      gameID: null
     })
   }
-  
+
   render() {
     return (
       <div className="App">
         <header>
-          <TopBar 
-              socketConnected={this.state.socketConnected}
-              playerLoggedIn={this.state.playerLoggedIn}
-              player={this.state.player}
-              registerPlayer={this.registerPlayer}
-              showMenu={this.state.showMenu} 
-              toggleMenu={this.toggleMenu}
-              playerQuit={this.playerQuit}
+          <TopBar
+            socketConnected={this.state.socketConnected}
+            playerLoggedIn={this.state.playerLoggedIn}
+            player={this.state.player}
+            registerPlayer={this.registerPlayer}
+            showMenu={this.state.showMenu}
+            toggleMenu={this.toggleMenu}
+            playerQuit={this.playerQuit}
           />
         </header>
-        { 
+        {
           this.state.showMenu &&
-          <Menu 
-              playerLoggedIn={this.state.playerLoggedIn}
-              player={this.state.player}
-              setGameID={this.setGameID}
-          /> 
+          <Menu
+            playerLoggedIn={this.state.playerLoggedIn}
+            player={this.state.player}
+            setGameID={this.setGameID}
+          />
         }
         {
-          this.state.playerLoggedIn && this.state.gameID !== undefined && 
-          <Game player={this.state.player} gameID={this.state.gameID}/>
+          this.state.playerLoggedIn && this.state.gameID !== undefined &&
+          <Game player={this.state.player} gameID={this.state.gameID} />
         }
       </div>
     )
@@ -115,4 +122,3 @@ class App extends Component {
 }
 
 export default App;
- 

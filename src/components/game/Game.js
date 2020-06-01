@@ -32,6 +32,7 @@ class Game extends Component {
         }
         this.handleNewGameState = this.handleNewGameState.bind(this)
         this.handleNewPlayerState = this.handleNewPlayerState.bind(this)
+        this.changeTeams = this.changeTeams.bind(this)
         this.startGame = this.startGame.bind(this)
         this.cardClicked = this.cardClicked.bind(this)
         this.marbleClicked = this.marbleClicked.bind(this)
@@ -41,6 +42,19 @@ class Game extends Component {
         this.setJokerAction = this.setJokerAction.bind(this)
     }
 
+    componentDidMount() {
+        socket.on('game-state', data => {
+            console.log('received game state', data)
+            this.handleNewGameState(data)
+        })
+        socket.on('player-state', data => {
+            console.log('received player state', data)
+            this.handleNewPlayerState(data)
+        })
+        socket.on('join-game-success', data => {
+            console.log('succesfully joined game socket', data)
+        })
+    }
 
     componentDidUpdate(prevProps) {
         if (prevProps.gameID !== this.props.gameID) {
@@ -82,18 +96,8 @@ class Game extends Component {
         })
     }
 
-    componentDidMount() {
-        socket.on('game-state', data => {
-            console.log('received game state', data)
-            this.handleNewGameState(data)
-        })
-        socket.on('player-state', data => {
-            console.log('received player state', data)
-            this.handleNewPlayerState(data)
-        })
-        socket.on('join-game-success', data => {
-            console.log('succesfully joined game socket', data)
-        })
+    async changeTeams() {
+
     }
 
     cardClicked(index) {

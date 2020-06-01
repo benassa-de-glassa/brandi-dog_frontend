@@ -14,17 +14,25 @@ var GameViewer = function (props) {
     const [joinedGame, setJoinedGame] = useState(false)
     const [error, setError] = useState("")
 
+    // 
+    var errorTimeout
+
     const updateGameList = async function () {
+        // this function is only called after pressing the update button
+        // manually as the game list is updated using socket.io
         const response = await get('games')
         const responseJson = await response.json()
         setGameList(responseJson)
     }
 
-    const handleCreateGameInput = (event) => setInput(event.target.value)
-    const handleCreateGameSubmit = async (event) => {
-        event.preventDefault()
+    // let react control the input
+    const handleCreateGameInput = event => setInput(event.target.value)
+
+    
+    const handleCreateGameSubmit = async event => {
+        event.preventDefault() // don't use the default submit
         var relURL = 'games'
-        if (DEBUG) { relURL += '?debug=true' }
+        if (DEBUG) { relURL += '?debug=true' } // adds 3 filler players
 
         const response = await postData(relURL, {
             player: props.player,
@@ -32,7 +40,6 @@ var GameViewer = function (props) {
         })
         const responseJson = await response.json()
         if (response.status === 200) {
-            updateGameList()
             joinGame(responseJson.game_id)
             setCreateGame(false)
         } else {
@@ -62,12 +69,14 @@ var GameViewer = function (props) {
                 console.warn(err.message)
             }
         }
-        updateGameList()
     }
 
     // like componendDidMount
     useEffect(() => {
-        updateGameList()
+        socket.on('game-list', gameList => {
+            console.log(gameList)
+            setGameList(gameList)
+        })
     }, [])
 
     return (
@@ -86,7 +95,7 @@ var GameViewer = function (props) {
                 </thead>
                 <tbody>
                     {gameList.map((game, index) =>
-                        <tr key={game.game_name} onClick={() => setSelectRow(index)}
+                        <tr key={game.game_name} onClick={() => { setSelectRow(index); setError('') }}
                             className={(index === selectedRow ? "selected-row " : "") + (game.game_id === joinedGame ? 'joined-row' : "")}>
                             <td>{game.game_name}</td>
                             <td>{game.host.name}</td>
