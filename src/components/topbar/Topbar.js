@@ -22,12 +22,12 @@ function TopBar(props) {
           <span className="ml-auto mr-2">
                   Playing as  <strong>{props.player.name} (#{props.player.uid})</strong>
           </span>
-          <input type="button" className="top-bar-link mr-2" value="Quit" onClick={props.playerQuit}/>
+          <input type="button" className="top-bar-link mr-2" value="Logout" onClick={props.logout}/>
           </Fragment> 
         }
         { 
           !props.playerLoggedIn && 
-          <UserRegistration registerPlayer={props.registerPlayer}/>
+          <UserRegistration login={props.login}/>
         } 
       </div>
   )

@@ -8,7 +8,7 @@ import Menu from './components/menu/Menu'
 import Game from './components/game/Game'
 
 import { socket } from './socket'
-import { postData } from './paths'
+import { API_URL_WITHOUT_V1 } from './paths'
 
 import { DEBUG } from './config'
 
@@ -16,6 +16,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      token: '',
       socketConnected: false,   // connection to socket.io of the backend
       playerLoggedIn: false,    // player has signed in with a name
       showMenu: true,           // top menu containing global chat and lobbies
@@ -27,7 +28,9 @@ class App extends Component {
     }
 
     this.toggleMenu = this.toggleMenu.bind(this)
-    this.registerPlayer = this.registerPlayer.bind(this)
+    this.getPlayer = this.getPlayer.bind(this)
+    this.login = this.login.bind(this)
+    this.logout = this.logout.bind(this)
     this.playerQuit = this.playerQuit.bind(this)
     this.setGameID = this.setGameID.bind(this)
   }
@@ -47,10 +50,11 @@ class App extends Component {
 
   componentDidMount() {
     this.startSocketIO()
+    this.getPlayer()
 
     if (DEBUG) {
       // register automatically as testName
-      this.registerPlayer('testName', () => { })
+      this.login('testName', () => { })
     }
   }
 
@@ -62,16 +66,50 @@ class App extends Component {
     this.setState({ gameID: gameID })
   }
 
-  async registerPlayer(player, errorCallback) {
-    // sends player name to API_URL/player
-    // expects { name: str, id: str } in return
-    const response = await postData('player', { name: player })
-    const responseJson = await response.json()
-    if (response.status === 200) {
+  async getPlayer() {
+    // try to get the player name and id from the backend. For this to work a 
+    // valid authorization cookie has to be sent. 
+    let url = new URL('users/me', API_URL_WITHOUT_V1)
+    const playerResponse = await fetch(url, {
+      method: 'GET',
+      credentials: 'include'
+    })
+    const player = await playerResponse.json()
+    if (playerResponse.status === 200) {
       this.setState({
         playerLoggedIn: true,
-        player: responseJson
+        player: {
+          name: player.username,
+          uid: player.id
+        }
       })
+    } else {
+      console.log(player)
+    }
+  }
+
+  async login(username, password, errorCallback) {
+    // sends player name to API_URL/login
+    // expects { name: str, id: str } in return
+
+    const data = new URLSearchParams(
+      {
+        'grant_type': 'password',
+        'username': username,
+        'password': password
+      }
+    )
+
+    let url = new URL('token', API_URL_WITHOUT_V1)
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      credentials: 'include', // ONLY FOR DEBUG PURPOSES
+      body: data
+    })
+    const responseJson = await response.json()
+    if (response.status === 200) {
+      this.getPlayer()
     } else {
       console.debug(response.status, responseJson)
       try {
@@ -79,6 +117,17 @@ class App extends Component {
       } catch (error) {
         console.log(error)
       }
+    }
+  }
+
+  async logout() {
+    let url = new URL('logout', API_URL_WITHOUT_V1)
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include'
+    })
+    if (response.status === 200) {
+      this.playerQuit()
     }
   }
 
@@ -98,10 +147,10 @@ class App extends Component {
             socketConnected={this.state.socketConnected}
             playerLoggedIn={this.state.playerLoggedIn}
             player={this.state.player}
-            registerPlayer={this.registerPlayer}
+            login={this.login}
+            logout={this.logout}
             showMenu={this.state.showMenu}
             toggleMenu={this.toggleMenu}
-            playerQuit={this.playerQuit}
           />
         </header>
         {
