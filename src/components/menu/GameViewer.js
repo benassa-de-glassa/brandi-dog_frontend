@@ -11,11 +11,8 @@ var GameViewer = function (props) {
     const [createGame, setCreateGame] = useState(false)
     const [input, setInput] = useState("")
     const [selectedRow, setSelectRow] = useState()
-    const [joinedGame, setJoinedGame] = useState(false)
     const [error, setError] = useState("")
 
-    // 
-    var errorTimeout
 
     const updateGameList = async function () {
         // this function is only called after pressing the update button
@@ -40,36 +37,39 @@ var GameViewer = function (props) {
         })
         const responseJson = await response.json()
         if (response.status === 200) {
-            joinGame(responseJson.game_id)
+            props.joinGame(responseJson.game_id)
             setCreateGame(false)
         } else {
             console.log(responseJson.detail)
         }
     }
 
-    const joinGame = async (gameID) => {
-        const response = await postData('games/' + gameID + '/join',
-            props.player
-        )
-        //const responseJson = await response.json()
-        if (response.status === 200) {
-            socket.emit('join-game',
-                {
-                    player: props.player,
-                    game_id: gameID
-                }
-            )
-            props.setGameID(gameID)
-            setJoinedGame(gameID)
-        } else {
-            try {
-                let responseJson = await response.json()
-                setError(responseJson.detail)
-            } catch (err) {
-                console.warn(err.message)
-            }
-        }
-    }
+    // const joinGame = async (gameID) => {
+    //     const response = await postData('games/' + gameID + '/join',
+    //         {
+    //             username: props.player.name,
+    //             uid: props.player.uid 
+    //         }
+    //     )
+    //     //const responseJson = await response.json()
+    //     if (response.status === 200) {
+    //         socket.emit('join-game',
+    //             {
+    //                 player: props.player,
+    //                 game_id: gameID
+    //             }
+    //         )
+    //         props.setGameID(gameID)
+    //         setJoinedGame(gameID)
+    //     } else {
+    //         try {
+    //             let responseJson = await response.json()
+    //             setError(responseJson.detail)
+    //         } catch (err) {
+    //             console.warn(err.message)
+    //         }
+    //     }
+    // }
 
     // like componendDidMount
     useEffect(() => {
@@ -96,23 +96,23 @@ var GameViewer = function (props) {
                 <tbody>
                     {gameList.map((game, index) =>
                         <tr key={game.game_name} onClick={() => { setSelectRow(index); setError('') }}
-                            className={(index === selectedRow ? "selected-row " : "") + (game.game_id === joinedGame ? 'joined-row' : "")}>
+                            className={(index === selectedRow ? "selected-row " : "") + (game.game_id === props.joinedGame ? 'joined-row' : "")}>
                             <td>{game.game_name}</td>
                             <td>{game.host.name}</td>
-                            <td>{Object.values(game.players).map(player => player.name).join(', ')}</td>
+                            <td>{Object.values(game.players).map(player => player.username).join(', ')}</td>
                         </tr>
                     )}
                 </tbody>
             </table>
             {}
             <input type='button' className="mr-auto"
-                onClick={() => joinGame(gameList[selectedRow].game_id)}
-                value='Join' disabled={!props.playerLoggedIn || selectedRow === undefined || joinedGame} />
+                onClick={() => props.joinGame(gameList[selectedRow].game_id)}
+                value='Join' disabled={!props.playerLoggedIn || selectedRow === undefined || props.joinedGame} />
             <input type='button' className="mr-auto"
-                onClick={() => alert('not implemented yet. complain on github')}
-                value='Leave' disabled={!joinedGame} />
+                onClick={props.leaveGame}
+                value='Leave' disabled={!props.joinedGame} />
             <input type='button' onClick={updateGameList} value='Update' />
-            <input type='button' onClick={() => setCreateGame(true)} value='New Lobby' disabled={joinedGame || !props.playerLoggedIn} />
+            <input type='button' onClick={() => setCreateGame(true)} value='New Lobby' disabled={props.joinedGame || !props.playerLoggedIn} />
             {
                 createGame &&
                 <form className='ml-auto mr-2' onSubmit={handleCreateGameSubmit}>

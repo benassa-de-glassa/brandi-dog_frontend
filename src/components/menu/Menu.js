@@ -18,7 +18,9 @@ class Menu extends Component {
                 <GameViewer 
                     playerLoggedIn={this.props.playerLoggedIn} 
                     player={this.props.player}
-                    setGameID={this.props.setGameID}
+                    joinGame={this.props.joinGame}
+                    joinedGame={this.props.joinedGame}
+                    leaveGame={this.props.leaveGame}
                 />
                 <GlobalChat 
                     playerLoggedIn={this.props.playerLoggedIn} 

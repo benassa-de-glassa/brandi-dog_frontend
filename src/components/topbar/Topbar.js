@@ -20,7 +20,7 @@ function TopBar(props) {
           props.playerLoggedIn && 
           <Fragment>
           <span className="ml-auto mr-2">
-                  Playing as  <strong>{props.player.name} (#{props.player.uid})</strong>
+                  Playing as  <strong>{props.player.username} (#{props.player.uid})</strong>
           </span>
           <input type="button" className="top-bar-link mr-2" value="Logout" onClick={props.logout}/>
           </Fragment> 

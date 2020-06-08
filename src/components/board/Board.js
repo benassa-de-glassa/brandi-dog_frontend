@@ -91,7 +91,7 @@ function Board(props) {
               onClick={() => playerBoxClicked(0)}
             />
             <text x="10%" y="20%" className="player-name">
-              {playerList[0].uid === props.player.uid ? '\u265F' + playerList[0].name : playerList[0].name}
+              {playerList[0].uid === props.player.uid ? '\u265F' + playerList[0].username : playerList[0].username}
             </text>
           </g>
         </svg>
@@ -105,7 +105,7 @@ function Board(props) {
               onClick={() => playerBoxClicked(1)}
             />
             <text className="player-name" x="10%" y="20%" >
-              {playerList[1].uid === props.player.uid ? '\u265F' + playerList[1].name : playerList[1].name}
+              {playerList[1].uid === props.player.uid ? '\u265F' + playerList[1].username : playerList[1].username}
             </text>
           </g>
         </svg>
@@ -119,7 +119,7 @@ function Board(props) {
               onClick={() => playerBoxClicked(2)}
             />
             <text x="10%" y="90%" className="player-name">
-              {playerList[2].uid === props.player.uid ? '\u265F' + playerList[2].name : playerList[2].name}  
+              {playerList[2].uid === props.player.uid ? '\u265F' + playerList[2].username : playerList[2].username}  
             </text>
           </g>
         </svg>        
@@ -133,7 +133,7 @@ function Board(props) {
               onClick={() => playerBoxClicked(3)}
             />
             <text x="10%" y="90%" className="player-name">
-              {playerList[3].uid === props.player.uid ? '\u265F' + playerList[3].name : playerList[3].name}
+              {playerList[3].uid === props.player.uid ? '\u265F' + playerList[3].username : playerList[3].username}
             </text>
           </g>
         </svg>

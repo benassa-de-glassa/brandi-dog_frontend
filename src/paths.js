@@ -13,6 +13,7 @@ export var postData = async function(relURL = '', data = {}) {
         method: 'POST',
         mode: 'cors',
         headers: { 'Content-Type': 'application/json'},
+        credentials: 'include',
         body: JSON.stringify(data)
     })
     if (response.status !== 200) {

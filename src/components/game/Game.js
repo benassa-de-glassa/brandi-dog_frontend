@@ -56,15 +56,15 @@ class Game extends Component {
         })
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.gameID !== this.props.gameID) {
-            // change in game id means player has joined a new game
-            socket.emit('join-game', {
-                game_id: this.props.gameID,
-                player: this.props.player,
-            })
-        }
-    }
+    // componentDidUpdate(prevProps) {
+    //     if (prevProps.gameID !== this.props.gameID) {
+    //         // change in game id means player has joined a new game
+    //         socket.emit('join-game', {
+    //             game_id: this.props.gameID,
+    //             player: this.props.player,
+    //         })
+    //     }
+    // }
 
     handleNewGameState(data) {
         if (data.round_state === 5) {

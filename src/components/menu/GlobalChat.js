@@ -25,7 +25,7 @@ class GlobalChat extends Component {
 
   handleClick() {
     socket.emit('chat_message', {
-      sender: this.props.player.name,
+      sender: this.props.player.username,
       text: this.state.textValue
     })
     this.setState({ textValue: '' })
