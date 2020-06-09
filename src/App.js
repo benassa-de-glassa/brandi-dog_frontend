@@ -83,146 +83,136 @@ class App extends Component {
             })
             // player is already in a game
             if (player.current_game) {
-                const response = await postData(
-                    'game_token'
-                )
-                const responseJson = await response.json()
-                if (response.status === 200) {
-                    gameToken = responseJson.game_token
-                    this.setState({
-                        gameID: responseJson,
-                        gameToken: gameToken
-                    })
-                    this.joinGameSocket(gameToken)
-                }
+                this.joinGameSocket(player.game_token)
             }
         } else {
-            console.log(player)
+            console.error(player)
         }
     }
 
-    async login(username, password, errorCallback) {
-        // sends player name to API_URL/login
-        // expects { name: str, id: str } in return
+async login(username, password, errorCallback) {
+    // sends player name to API_URL/login
+    // expects { name: str, id: str } in return
 
-        const data = new URLSearchParams(
-            {
-                'grant_type': 'password',
-                'username': username,
-                'password': password
-            }
-        )
+    const data = new URLSearchParams(
+        {
+            'grant_type': 'password',
+            'username': username,
+            'password': password
+        }
+    )
 
-        let url = new URL('token', API_URL_WITHOUT_V1)
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            credentials: 'include', // ONLY FOR DEBUG PURPOSES
-            body: data
-        })
-        const responseJson = await response.json()
-        if (response.status === 200) {
-            this.getPlayer()
-        } else {
-            console.warn(response.status, responseJson)
-            try {
-                errorCallback(responseJson.detail)
-            } catch (error) {
-                console.log(error)
-            }
+    let url = new URL('token', API_URL_WITHOUT_V1)
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        credentials: 'include', // ONLY FOR DEBUG PURPOSES
+        body: data
+    })
+    const responseJson = await response.json()
+    if (response.status === 200) {
+        this.getPlayer()
+    } else {
+        console.warn(response.status, responseJson)
+        try {
+            errorCallback(responseJson.detail)
+        } catch (error) {
+            console.log(error)
         }
     }
+}
 
-    async logout() {
-        socket.close()
-        let url = new URL('logout', API_URL_WITHOUT_V1)
-        const response = await fetch(url, {
-            method: 'GET',
-            credentials: 'include'
-        })
-        if (response.status === 200) {
-            this.playerQuit()
-        }
+async logout() {
+    socket.close()
+    let url = new URL('logout', API_URL_WITHOUT_V1)
+    const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include'
+    })
+    if (response.status === 200) {
+        this.playerQuit()
     }
+}
 
-    playerQuit() {
+playerQuit() {
+    this.setState({
+        playerLoggedIn: false,
+        player: { name: "", uid: null },
+        gameID: null
+    })
+}
+
+async joinGame(gameID) {
+    const response = await postData(
+        'games/' + gameID + '/join',
+        this.state.player
+    )
+    const responseJson = await response.json()
+    if (response.status === 200) {
+        this.joinGameSocket(responseJson.game_token)
+    } else {
+        console.warn(responseJson)
+    }
+}
+
+async joinGameSocket(game_token) {
+    console.log(game_token)
+    socket.emit('join_game_socket', {
+        player: this.state.player,
+        game_token: game_token
+    })
+    socket.on('join_game_success', data => {
+        console.log(data)
         this.setState({
-            playerLoggedIn: false,
-            player: { name: "", uid: null },
-            gameID: null
+            gameID: data.game_id
         })
-    }
+    })
+}
 
-    async joinGame(gameID) {
-        const response = await postData(
-            'games/' + gameID + '/join',
-            this.state.player
-        )
-        const responseJson = await response.json()
-        if (response.status === 200) {
-            this.joinGameSocket(responseJson.game_token)
-        } else {
-            console.warn(responseJson)
+async leaveGame() {
+    socket.emit('leave_game',
+        {
+            game_id: this.state.gameID,
+            player_id: this.state.player.uid
         }
-    }
+    )
+    socket.on('leave_game_success', () => {
+        this.setState({ gameID: null })
+    })
+}
 
-    async joinGameSocket(token) {
-        socket.emit('join_game_socket', {
-            player: this.state.player,
-            token: token
-        })
-        socket.on('join_game_success', data => {
-            console.log(data)
-            this.setState({
-                gameID: data.game_id
-            })
-        })
-    }
-
-    async leaveGame() {
-        socket.emit('leave_game',
+render() {
+    return (
+        <div className="App">
+            <header>
+                <TopBar
+                    socketConnected={this.state.socketConnected}
+                    playerLoggedIn={this.state.playerLoggedIn}
+                    player={this.state.player}
+                    login={this.login}
+                    logout={this.logout}
+                    showMenu={this.state.showMenu}
+                    toggleMenu={this.toggleMenu}
+                />
+            </header>
             {
-                game_id: this.state.gameID,
-                player_id: this.state.player.uid
+                this.state.showMenu &&
+                <Menu
+                    playerLoggedIn={this.state.playerLoggedIn}
+                    player={this.state.player}
+                    joinGame={this.joinGame}
+                    joinedGame={this.state.gameID}
+                    joinGameSocket={this.joinGameSocket}
+                    leaveGame={this.leaveGame}
+                />
             }
-        )
-        socket.on('leave_game_success', () => {
-            this.setState({ gameID: null })
-        })
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <header>
-                    <TopBar
-                        socketConnected={this.state.socketConnected}
-                        playerLoggedIn={this.state.playerLoggedIn}
-                        player={this.state.player}
-                        login={this.login}
-                        logout={this.logout}
-                        showMenu={this.state.showMenu}
-                        toggleMenu={this.toggleMenu}
-                    />
-                </header>
-                {
-                    this.state.showMenu &&
-                    <Menu
-                        playerLoggedIn={this.state.playerLoggedIn}
-                        player={this.state.player}
-                        joinGame={this.joinGame}
-                        joinedGame={this.state.gameID}
-                        joinGameSocket={this.joinGameSocket}
-                        leaveGame={this.leaveGame}
-                    />
-                }
-                {
-                    this.state.playerLoggedIn && this.state.gameID !== null &&
-                    <Game player={this.state.player} gameID={this.state.gameID} />
-                }
-            </div>
-        )
-    };
+            {
+                this.state.playerLoggedIn && this.state.gameID !== null &&
+                <Game player={this.state.player} gameID={this.state.gameID} />
+            }
+        </div>
+    )
+};
 }
 
 export default App;
