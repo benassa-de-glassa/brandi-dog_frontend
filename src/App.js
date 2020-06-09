@@ -124,7 +124,7 @@ class App extends Component {
         if (response.status === 200) {
             this.getPlayer()
         } else {
-            console.debug(response.status, responseJson)
+            console.warn(response.status, responseJson)
             try {
                 errorCallback(responseJson.detail)
             } catch (error) {
@@ -134,6 +134,7 @@ class App extends Component {
     }
 
     async logout() {
+        socket.close()
         let url = new URL('logout', API_URL_WITHOUT_V1)
         const response = await fetch(url, {
             method: 'GET',
@@ -171,6 +172,7 @@ class App extends Component {
             token: token
         })
         socket.on('join_game_success', data => {
+            console.log(data)
             this.setState({
                 gameID: data.game_id
             })
@@ -210,6 +212,7 @@ class App extends Component {
                         player={this.state.player}
                         joinGame={this.joinGame}
                         joinedGame={this.state.gameID}
+                        joinGameSocket={this.joinGameSocket}
                         leaveGame={this.leaveGame}
                     />
                 }

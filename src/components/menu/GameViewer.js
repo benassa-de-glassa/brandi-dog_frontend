@@ -24,7 +24,6 @@ var GameViewer = function (props) {
 
     // let react control the input
     const handleCreateGameInput = event => setInput(event.target.value)
-
     
     const handleCreateGameSubmit = async event => {
         event.preventDefault() // don't use the default submit
@@ -37,44 +36,16 @@ var GameViewer = function (props) {
         })
         const responseJson = await response.json()
         if (response.status === 200) {
-            props.joinGame(responseJson.game_id)
+            props.joinGameSocket(responseJson.game_token)
             setCreateGame(false)
         } else {
             console.log(responseJson.detail)
         }
     }
 
-    // const joinGame = async (gameID) => {
-    //     const response = await postData('games/' + gameID + '/join',
-    //         {
-    //             username: props.player.name,
-    //             uid: props.player.uid 
-    //         }
-    //     )
-    //     //const responseJson = await response.json()
-    //     if (response.status === 200) {
-    //         socket.emit('join-game',
-    //             {
-    //                 player: props.player,
-    //                 game_id: gameID
-    //             }
-    //         )
-    //         props.setGameID(gameID)
-    //         setJoinedGame(gameID)
-    //     } else {
-    //         try {
-    //             let responseJson = await response.json()
-    //             setError(responseJson.detail)
-    //         } catch (err) {
-    //             console.warn(err.message)
-    //         }
-    //     }
-    // }
-
     // like componendDidMount
     useEffect(() => {
         socket.on('game-list', gameList => {
-            console.log(gameList)
             setGameList(gameList)
         })
     }, [])

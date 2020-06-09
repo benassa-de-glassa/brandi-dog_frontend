@@ -51,9 +51,11 @@ class Game extends Component {
             console.log('received player state', data)
             this.handleNewPlayerState(data)
         })
-        socket.on('join-game-success', data => {
-            console.log('succesfully joined game socket', data)
-        })
+    }
+
+    componentWillUnmount() {
+        socket.off('game-state')
+        socket.off('player-state')
     }
 
     // componentDidUpdate(prevProps) {
@@ -67,7 +69,7 @@ class Game extends Component {
     // }
 
     handleNewGameState(data) {
-        if (data.round_state === 5) {
+        if (data.round_state === 4) {
             this.setState({ cardSwapConfirmed: false })
         }
         const players = data.order.map(uid => data.players[uid])

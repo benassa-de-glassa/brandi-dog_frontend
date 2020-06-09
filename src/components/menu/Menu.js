@@ -20,6 +20,7 @@ class Menu extends Component {
                     player={this.props.player}
                     joinGame={this.props.joinGame}
                     joinedGame={this.props.joinedGame}
+                    joinGameSocket={this.props.joinGameSocket}
                     leaveGame={this.props.leaveGame}
                 />
                 <GlobalChat 
