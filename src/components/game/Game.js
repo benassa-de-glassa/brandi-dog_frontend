@@ -70,7 +70,8 @@ class Game extends Component {
                 roundState: data.round_state,
                 activePlayerIndex: data.active_player_index,
                 topCard: data.top_card,
-                playerIsActive: players[data.active_player_index].uid === this.props.player.uid
+                playerIsActive: players[data.active_player_index].uid === this.props.player.uid,
+                cardSwapConfirmed: data.round_state < 2
             })
         )
     }
