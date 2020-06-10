@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 
-class UserRegistration extends Component {
+export default class UserLogin extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -38,32 +38,30 @@ class UserRegistration extends Component {
             <form className='ml-auto mr-2' onSubmit={this.handleSubmit}>
                 <label className='mr-1'>
                     Log in: </label>
-                <input
-                    name='username'
-                    label='USERNAME'
-                    type='text'
-                    className='mr-1'
-                    value={this.state.username}
-                    onChange={this.handleChange}
-                    placeholder='Username'
-                />
-                <input 
-                    name='password'
-                    label='PASSWORD'
-                    type='password' 
-                    className='mr-1' 
-                    value={this.state.password} 
-                    onChange={this.handleChange} 
-                    placeholder='Password' 
-                />
-
+                <div>
+                    <input
+                        name='username'
+                        label='USERNAME'
+                        type='text'
+                        className='mr-1'
+                        value={this.state.username}
+                        onChange={this.handleChange}
+                        placeholder='Username'
+                    />
+                    <input 
+                        name='password'
+                        label='PASSWORD'
+                        type='password' 
+                        className='mr-1' 
+                        value={this.state.password} 
+                        onChange={this.handleChange} 
+                        placeholder='Password' 
+                    />
+                </div>
                 <input type='submit' className='top-bar-link' value='Submit' />
             </form>
-            <input type='button' className='top-bar-link' value='Create user' />
             </Fragment>
         )
 
     }
 }
-
-export default UserRegistration

@@ -1,9 +1,14 @@
-import React, { Fragment } from 'react'
+import React, { useState, Fragment } from 'react'
 
-import UserRegistration from './UserRegistration'
+import { Link } from 'react-router-dom'
+
+import UserLogin from './UserLogin'
+import UserCreate from './UserCreate'
 
 function TopBar(props) {
   var buttonValue = props.showMenu ? "Hide Menu" : "Show Menu"
+
+  const [createUser, setCreateUser] = useState(false)
 
   return (
       <div className="topbar">
@@ -16,6 +21,24 @@ function TopBar(props) {
 
         <input type="button" className="top-bar-link" value={buttonValue} onClick={props.toggleMenu}/>
 
+
+        <Link to='/users/login'>Login</Link>
+
+        {
+          !props.playerLoggedIn && !createUser &&
+          <Fragment>
+          <input type="button" className="top-bar-link mr-2 ml-2" value="Create new user" onClick={() => setCreateUser(true)}/>
+          <UserLogin login={props.login}/>
+          </Fragment>
+        }
+        {
+          !props.playerLoggedIn && createUser &&
+          <Fragment>
+          <input type="button" className="top-bar-link mr-2 ml-2" value="Use existing user" onClick={() => setCreateUser(false)}/>
+          <UserCreate createUser={props.createUser}/>
+          </Fragment>
+        }
+        
         { 
           props.playerLoggedIn && 
           <Fragment>
@@ -25,10 +48,6 @@ function TopBar(props) {
           <input type="button" className="top-bar-link mr-2" value="Logout" onClick={props.logout}/>
           </Fragment> 
         }
-        { 
-          !props.playerLoggedIn && 
-          <UserRegistration login={props.login}/>
-        } 
       </div>
   )
 }

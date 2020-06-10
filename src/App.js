@@ -181,6 +181,33 @@ async leaveGame() {
     })
 }
 
+async createUser(username, password, callback) {
+    // creates a user but does not login
+
+    // const data = new URLSearchParams(
+    //     {
+    //         'username': username,
+    //         'password': password
+    //     }
+    // )
+    const data = { username: username, password: password }
+
+    let url = new URL('create_user', API_URL_WITHOUT_V1)
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        credentials: 'include', // ONLY FOR DEBUG PURPOSES
+        body: data
+    })
+    const responseJson = await response.json()
+    if (response.status === 200) {  
+        // callback
+    } else {
+        console.error(responseJson)
+        
+    }
+}
+
 render() {
     return (
         <div className="App">
