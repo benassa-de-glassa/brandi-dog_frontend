@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import Hand from './Hand'
 import './controls.css'
@@ -52,16 +52,23 @@ function Controls(props) {
     possibleMoveString = ''
   }
 
-  var handleClick = event => {
+  const handleClick = event => {
     event.preventDefault()
     props.startGame()
+  }
+
+  const swapClicked = event => {
+    event.preventDefault()
   }
 
   return (
     <div className="controls-box">
       <div className="instruction-box">
         {props.gameState < 2 &&
-          <button onClick={handleClick}> Start game </button>
+        <span>
+          <button onClick={handleClick}>Start game</button>
+          <button onClick={swapClicked}>Change seat</button>
+        </span>
         }
       </div>
 

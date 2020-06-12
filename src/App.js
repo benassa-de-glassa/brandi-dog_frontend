@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
+import {
+    BrowserRouter as Router,
+    Route, 
+    Switch
+} from 'react-router-dom'
 
-// import logo from './logo.svg';
 import './App.css';
 import './mycss.css'
 
 import TopBar from './components/topbar/Topbar'
 import Menu from './components/menu/Menu'
 import Game from './components/game/Game'
+import UserLogin from './components/userlogin/UserLogin'
+import About from './components/about/About'
 
 import { postData, API_URL_WITHOUT_V1 } from './paths'
 import { socket } from './socket'
+import UserCreate from './components/userlogin/UserCreate';
 
 
 class App extends Component {
@@ -24,7 +31,8 @@ class App extends Component {
                 uid: null
             },
             gameID: null,           // currently joined game
-            gameToken: ''           // jwt
+            gameToken: '',          // jwt
+            errorMessage: ''
         }
 
         this.toggleMenu = this.toggleMenu.bind(this)
@@ -42,15 +50,16 @@ class App extends Component {
         // the socket connection state is indicated by the green or red circle
         // const socket = getSocket()
         socket.on('connect', () => {
-            console.log('socket.io connection successful')
+            console.debug('socket.io connection successful')
             this.setState({ socketConnected: true })
         })
         socket.on('disconnect', () => {
-            console.log('socket.io connection lost.');
+            console.debug('socket.io connection lost.');
             this.setState({ socketConnected: false })
         })
         socket.on('error', data => {
             console.error(data)
+            this.setState({ errorMessage: data.detail })
         })
     }
 
@@ -143,6 +152,7 @@ playerQuit() {
 }
 
 async joinGame(gameID) {
+    console.warn('this happens too')
     const response = await postData(
         'games/' + gameID + '/join',
         this.state.player
@@ -156,13 +166,12 @@ async joinGame(gameID) {
 }
 
 async joinGameSocket(game_token) {
-    console.log(game_token)
+    // joining the game is only completed once the game socket has been joined
     socket.emit('join_game_socket', {
         player: this.state.player,
         game_token: game_token
     })
     socket.on('join_game_success', data => {
-        console.log(data)
         this.setState({
             gameID: data.game_id
         })
@@ -181,63 +190,77 @@ async leaveGame() {
     })
 }
 
-async createUser(username, password, callback) {
+async createUser(username, password, successCallback, errorCallback) {
     // creates a user but does not login
-
-    // const data = new URLSearchParams(
-    //     {
-    //         'username': username,
-    //         'password': password
-    //     }
-    // )
-    const data = { username: username, password: password }
+    let data = { username: username, password: password }
 
     let url = new URL('create_user', API_URL_WITHOUT_V1)
-    const response = await fetch(url, {
+    let response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // ONLY FOR DEBUG PURPOSES
-        body: data
+        body: JSON.stringify(data)
     })
-    const responseJson = await response.json()
+    let responseJson = await response.json()
     if (response.status === 200) {  
-        // callback
+        successCallback()
     } else {
         console.error(responseJson)
-        
+        errorCallback(responseJson.detail)
     }
 }
 
 render() {
     return (
+        <Router>
         <div className="App">
-            <header>
-                <TopBar
-                    socketConnected={this.state.socketConnected}
-                    playerLoggedIn={this.state.playerLoggedIn}
-                    player={this.state.player}
-                    login={this.login}
-                    logout={this.logout}
-                    showMenu={this.state.showMenu}
-                    toggleMenu={this.toggleMenu}
-                />
-            </header>
-            {
-                this.state.showMenu &&
-                <Menu
-                    playerLoggedIn={this.state.playerLoggedIn}
-                    player={this.state.player}
-                    joinGame={this.joinGame}
-                    joinedGame={this.state.gameID}
-                    joinGameSocket={this.joinGameSocket}
-                    leaveGame={this.leaveGame}
-                />
+            <TopBar
+                socketConnected={this.state.socketConnected}
+                playerLoggedIn={this.state.playerLoggedIn}
+                player={this.state.player}
+                login={this.login}
+                logout={this.logout}
+                showMenu={this.state.showMenu}
+                toggleMenu={this.toggleMenu}
+            />
+            { this.state.errorMessage &&
+            <span class='error'>{this.state.errorMessage}</span>
             }
-            {
-                this.state.playerLoggedIn && this.state.gameID !== null &&
-                <Game player={this.state.player} gameID={this.state.gameID} />
-            }
+            <Switch>
+                <Route path='/' exact render = {() => 
+                    <div className='main-page'>
+                    { 
+                        this.state.showMenu &&
+                        <Menu
+                            playerLoggedIn={this.state.playerLoggedIn}
+                            player={this.state.player}
+                            joinGame={this.joinGame}
+                            joinedGame={this.state.gameID}
+                            joinGameSocket={this.joinGameSocket}
+                            leaveGame={this.leaveGame}
+                            closeMenu={() => this.setState({ showMenu: false })}
+                        />
+                    } { 
+                        this.state.playerLoggedIn && this.state.gameID !== null &&
+                        <Game player={this.state.player} gameID={this.state.gameID} />
+                    } 
+                    </div>
+                } />
+                <Route path='/users/login' exact render = {() => 
+                    <UserLogin 
+                        playerLoggedIn={this.state.playerLoggedIn}
+                        login={this.login}
+                    />
+                } />
+                <Route path='/users/create' exact component = {() => 
+                    <UserCreate 
+                        createUser={this.createUser}
+                    />
+                } />
+                <Route path='/about' exact component = {() => <About />} />
+            </Switch>
         </div>
+        </Router>
     )
 };
 }

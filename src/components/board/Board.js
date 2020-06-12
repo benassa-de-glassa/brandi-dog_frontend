@@ -15,7 +15,14 @@ function Board(props) {
   const height = 800;
   const width = 800;
 
-  const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, text: '' })
+  const [tooltip, setTooltip] = useState(
+    {
+      visible: false,
+      x: 0, y: 0,
+      anchor: { x: 'left', y: 'top' },
+      text: ''
+    }
+  )
 
   var playerList = [...props.playerList, '', '', '', ''] // make sure this list is at least 4 long.. players are added to the beginning
 
@@ -58,12 +65,26 @@ function Board(props) {
       // homeClicked indicates if the player wants to go out or not
       props.marbleClicked(marble, homeClicked)
     }
+
+    // show tooltip
     if (props.tooltipActions && marble !== undefined && !homeClicked) {
-      console.log(data)
+      let xPercent = parseFloat(data.x) // e.g. makes 35.3 out of '35.3%'
+      let yPercent = parseFloat(data.y)
+      // show the tooltip to the left (top) or the right (bottom) of the step
+      // depending on the location, e.g. show it to the right if a step in the
+      // left half of the board is clicked
       setTooltip({
         visible: true,
-        x: 'calc(' + data.x + ' + 10px)',
-        y: 'calc(' + data.y + ' + 10px)'
+        x: xPercent < 50
+          ? 'calc(' + data.x + ' + 10px)'
+          : 'calc(' + (100-xPercent) + '% + 10px)',
+        y: yPercent < 50 
+          ? 'calc(' + data.y + ' + 10px)'
+          : 'calc(' + (100-yPercent) + '% + 10px)',
+        anchor: {
+          x: parseInt(data.x) < 50 ? 'left' : 'right',
+          y: parseInt(data.y) < 50 ? 'top' : 'bottom'
+        }
       })
     }
   }
@@ -119,10 +140,10 @@ function Board(props) {
               onClick={() => playerBoxClicked(2)}
             />
             <text x="10%" y="90%" className="player-name">
-              {playerList[2].uid === props.player.uid ? '\u265F' + playerList[2].username : playerList[2].username}  
+              {playerList[2].uid === props.player.uid ? '\u265F' + playerList[2].username : playerList[2].username}
             </text>
           </g>
-        </svg>        
+        </svg>
         {/* bottom right player */}
         <svg x="80%" y="80%" height="20%" width="20%">
           <g transform={"rotate(-45 " + 0.2 * 0.05 * width + " " + 0.2 * 0.75 * height + ")"}>

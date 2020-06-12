@@ -45,8 +45,9 @@ var GameViewer = function (props) {
 
     // like componendDidMount
     useEffect(() => {
-        socket.on('game-list', gameList => {
-            setGameList(gameList)
+        updateGameList()
+        socket.on('game-list', games => {
+            setGameList(games)
         })
     }, [])
 
