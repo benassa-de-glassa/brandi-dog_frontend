@@ -16,10 +16,15 @@ function TopBar(props) {
                 >Boomer Dog{'\u2122'}
                 </Link>
 
-                {/* <Link className="top-bar-link ml-2" to='/'>Home</Link> */}
                 <Link className="top-bar-link ml-2" to='/about'>About</Link>
 
-                <input type="button" className="top-bar-link ml-2" value={'Menu'} onClick={props.toggleMenu} />
+                {props.location.pathname === '/' 
+                    ?
+                    <input type="button" className="top-bar-link ml-2 mr-2" 
+                        value={props.showMenu ? 'Hide Menu' : 'Menu'} onClick={props.toggleMenu} />
+                    :
+                    <Link className="top-bar-link ml-2" to='/'>Home</Link>
+                }
 
                 {props.playerLoggedIn
                     ?

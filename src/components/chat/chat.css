@@ -1,5 +1,7 @@
 div.chatbox {
     height: 50%;
+    display: flex;
+    flex-flow: column-reverse nowrap;
     position: absolute;
     bottom: 0px;
     left: 0px;
@@ -15,11 +17,8 @@ div.message-box {
 }
 
 div.editor-box {
-    height: 20%;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    order: -1;
+    font-family: inherit;
 }
 
 div.message {

@@ -176,6 +176,9 @@ async joinGameSocket(game_token) {
             gameID: data.game_id
         })
     })
+    socket.on('game_started', () => {
+        this.setState({ showMenu: false})
+    })
 }
 
 async leaveGame() {
@@ -257,7 +260,7 @@ render() {
                         createUser={this.createUser}
                     />
                 } />
-                <Route path='/about' exact component = {() => <About />} />
+                <Route path='/about' exact render = {() => <About />} />
             </Switch>
         </div>
         </Router>

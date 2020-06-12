@@ -53,7 +53,8 @@ var GameViewer = function (props) {
 
     return (
         <div id="game-viewer">
-            <strong className='mb-1'>Game List</strong>
+            <span className='subtitle mb-1'>Game List</span>
+            Click on a game to join, or create a new game. 
             {error &&
                 <p className='error'>{error}</p>
             }
@@ -71,20 +72,31 @@ var GameViewer = function (props) {
                             className={(index === selectedRow ? "selected-row " : "") + (game.game_id === props.joinedGame ? 'joined-row' : "")}>
                             <td>{game.game_name}</td>
                             <td>{game.host.name}</td>
-                            <td>{Object.values(game.players).map(player => player.username).join(', ')}</td>
+                            <td>
+                                { // reduce only works if game.players is not empty
+                                game.players && Object.values(game.players).map( 
+                                    player => 
+                                        player.username === props.player.username 
+                                        ? <strong>{player.username}</strong> 
+                                        : player.username
+                                ).reduce((accu, elem) => {
+                                    return accu === null ? [elem] : [...accu, ', ', elem]
+                                }, null)}
+                            </td>
                         </tr>
                     )}
                 </tbody>
             </table>
-            {}
-            <input type='button' className="mr-auto"
-                onClick={() => props.joinGame(gameList[selectedRow].game_id)}
-                value='Join' disabled={!props.playerLoggedIn || selectedRow === undefined || props.joinedGame} />
-            <input type='button' className="mr-auto"
-                onClick={props.leaveGame}
-                value='Leave' disabled={!props.joinedGame} />
-            <input type='button' onClick={updateGameList} value='Update' />
-            <input type='button' onClick={() => setCreateGame(true)} value='New Lobby' disabled={props.joinedGame || !props.playerLoggedIn} />
+            <span>
+                <input type='button' className="mr-auto"
+                    onClick={() => props.joinGame(gameList[selectedRow].game_id)}
+                    value='Join' disabled={!props.playerLoggedIn || selectedRow === undefined || props.joinedGame} />
+                <input type='button' className="mr-auto"
+                    onClick={props.leaveGame}
+                    value='Leave' disabled={!props.joinedGame} />
+                <input type='button' className='mr-auto' onClick={updateGameList} value='Update' />
+                <input type='button' className='mr-auto' onClick={() => setCreateGame(true)} value='New Lobby' disabled={props.joinedGame || !props.playerLoggedIn} />
+            </span>
             {
                 createGame &&
                 <form className='ml-auto mr-2' onSubmit={handleCreateGameSubmit}>

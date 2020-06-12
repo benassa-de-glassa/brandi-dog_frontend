@@ -10,7 +10,6 @@ class GlobalChat extends Component {
       textValue: "",
       messages: [
         { sender: 'server', time: '', text: 'Welcome to Boomer Dog' },
-        { sender: 'bene', time: 'halb vier', text: 'geh mal bier holn' }
       ],
     }
     this.handleChange = this.handleChange.bind(this)
@@ -59,7 +58,7 @@ class GlobalChat extends Component {
   render() {
     return (
       <div id='global-chat-container'>
-        <strong>Global chat</strong>
+        <span className='subtitle mb-1'>Global chat</span>
         <div id='global-message-box' className='message-box'>
           {this.state.messages.map(msg => {
             // color server messages differently

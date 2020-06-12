@@ -16,6 +16,7 @@ function Tooltip(props) {
                 [props.tooltip.anchor.x]: props.tooltip.x
             }}
         >
+            <p className='tooltip-text'>Choose a move</p>
             {props.tooltipActions.map(action =>
                 <button id={action} key={action} type="button" className='movebutton'
                     onClick={() => props.tooltipClicked(action)}>

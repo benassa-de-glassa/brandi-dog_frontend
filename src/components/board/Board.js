@@ -98,6 +98,7 @@ function Board(props) {
   }
 
   return (
+    <div id='left-game-container'>
     <div className="svg-container">
       <svg id="board" className="svg-content-responsive" viewBox={"0 0 " + width + " " + height}>
 
@@ -243,6 +244,7 @@ function Board(props) {
           selectedCard={props.selectedCard}
         />
       }
+    </div>
     </div>
   )
 }

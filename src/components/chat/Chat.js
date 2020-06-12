@@ -9,8 +9,7 @@ class Chat extends Component {
     this.state = {
       textValue: "",
       messages: [
-        {sender: 'server', time: 'now10', text: 'Welcome to Boomer Dog'},
-        {sender: 'bene', time: 'later3', text: 'geh mal bier holn'}
+        {sender: 'server', time: '', text: 'Welcome to Boomer Dog'},
       ],
     }
     this.handleChange = this.handleChange.bind(this)
@@ -24,11 +23,13 @@ class Chat extends Component {
   }
 
   handleClick() {
-    socket.emit('chat_message', {
-      sender: this.props.player.username,
-      text: this.state.textValue
-    })
-    this.setState({textValue: ''})
+    if (this.state.textValue) {
+      socket.emit('chat_message', {
+        sender: this.props.player.username,
+        text: this.state.textValue
+      })
+      this.setState({textValue: ''})
+    }
   }
 
   onEnterKey(event) {
