@@ -24,6 +24,7 @@ function Board(props) {
     }
   )
 
+  // const [seatOccupation, setSeatOccupation] = useState([null, null, null, null]
   var playerList = [...props.playerList, '', '', '', ''] // make sure this list is at least 4 long.. players are added to the beginning
 
   var homeOccupation = new Array(16);

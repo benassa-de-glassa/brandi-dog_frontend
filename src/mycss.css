@@ -1,5 +1,5 @@
 body {
-    background-color: #eff0f1;
+    background-color: #f8fcff;
 }
 
 header {
@@ -35,9 +35,14 @@ header {
     color: inherit;
     background: inherit;
     border: 0;
-    padding: 0;
+    padding: 10px 10px;
     cursor: pointer;
     text-decoration: none;
+    border-radius: 5px;
+}
+
+.top-bar-link:hover {
+    background-color: rgba(169, 169, 169, 0.315);
 }
 
 .error {
@@ -53,6 +58,10 @@ header {
 
 .subtitle {
     font-size: 18px;
+    font-weight: 700;
+}
+
+.bold {
     font-weight: 700;
 }
 
@@ -84,11 +93,26 @@ header {
     margin-bottom: 10px;
 }
 
+.mt-1 {
+    margin-top: 10px;
+}
+
+.my-1 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.wrap-text{
+    display: flex;
+    word-wrap: break-word;
+}
+
 .button:hover {
     cursor: pointer;
 }
 
 .game-container {
+    background: rgb(233, 233, 233);
     display: flex;
     flex-flow: row wrap;
     max-width: 1200px;
@@ -98,30 +122,33 @@ header {
 }
 
 #left-game-container {
-    display: flex;
+    display: inline-block;
     flex-grow: 1;
-    flex-basis: 60%;
+    flex-basis: 50%;
     box-sizing: border-box;
 }
 
 .right-container {
+    /* For this element */
     position: relative;
     display: flex;
-    flex-grow: 1;
+    flex-flow: column nowrap;
+    /* for parent flex */
+    flex-grow: 1;   
+    flex-basis: 25%;
+
     box-sizing: border-box;
-    min-width: 200px;
-    /* min-height: 400px; */
+    min-width: 400px;
     margin: 0;
-    margin-left: .5%;
-    background: whitesmoke;
-    border: 4px solid slategrey;
+    margin-left: 0;
+    border: 0px solid slategrey;
     /* border-radius: 5px; */
 }
 
 .svg-container {
     width: 100%;
     padding-bottom: 100%;
-    display: flex;
+    display: inline-block;
     position: relative;
     min-width: 400px;
     height: 0;
@@ -138,6 +165,21 @@ header {
 
 .component-title {
     margin: 5px;
+}
+
+button {
+    font-weight: 450;
+    color:white;
+    background-color: slateblue;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    border: 2px solid transparent;
+    border-radius: 3px;
+}
+
+button:hover {
+    border: 2px solid lightgrey;
 }
 
 button.close {
@@ -161,4 +203,14 @@ button.close {
 button.close:hover {
     color: #000;
     cursor: pointer;
+}
+
+button.danger {
+    color: white;
+    background-color: darkred;
+}
+
+button.green {
+    color: white;
+    background-color: darkolivegreen
 }

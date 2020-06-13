@@ -1,19 +1,19 @@
 div.chatbox {
-    height: 50%;
     display: flex;
     flex-flow: column-reverse nowrap;
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    margin: 10px;
-  }
+    box-sizing: border-box;
+    flex-basis: 50%;
+    flex-grow: 1;
+    padding: 10px;
+}
 
 div.message-box {
+    background-color: white;;
+    max-height: 400px;
+    min-height: 250px;
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    max-height: 79%;
 }
 
 div.editor-box {
@@ -50,7 +50,7 @@ div.server-message {
 .text-box {
     font-size: 14px;
     box-sizing: border-box;
-    height: 60%;
+    height: 40px;
     width: 100%;
     resize: none;
 }

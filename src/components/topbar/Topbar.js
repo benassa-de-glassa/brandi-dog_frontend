@@ -29,9 +29,9 @@ function TopBar(props) {
                 {props.playerLoggedIn
                     ?
                     <span className="ml-auto mr-2">
-                        Playing as  <strong>{props.player.username} (#{props.player.uid})</strong>
+                        Playing as  <span className='bold'>{props.player.username} (#{props.player.uid})</span>
 
-                        <input type="button" className="top-bar-link ml-2 mr-2" value="Logout" onClick={props.logout} />
+                        <input type="button" className="top-bar-link ml-2 mr-2 mt-1 mb-1" value="Logout" onClick={props.logout} />
                     </span>
                     :
                     <Fragment>

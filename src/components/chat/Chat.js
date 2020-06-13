@@ -23,16 +23,17 @@ class Chat extends Component {
   }
 
   handleClick() {
-    if (this.state.textValue) {
+    if (this.state.textValue.trim()) {
       socket.emit('chat_message', {
         sender: this.props.player.username,
         text: this.state.textValue
       })
-      this.setState({textValue: ''})
     }
+    this.setState({textValue: ''})
   }
 
   onEnterKey(event) {
+    event.preventDefault()
     if (event.key === 'Enter' && event.shiftKey === false ) {
       this.handleClick()
     }
@@ -45,7 +46,6 @@ class Chat extends Component {
 
   componentDidMount() {
     socket.on('chat_message', data => {
-      console.log('received')
       this.addMessage(data)
     })
   }

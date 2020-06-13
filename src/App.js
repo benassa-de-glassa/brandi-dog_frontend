@@ -93,6 +93,7 @@ class App extends Component {
             // player is already in a game
             if (player.current_game) {
                 this.joinGameSocket(player.game_token)
+                this.setState({ showMenu: false })
             }
         } else {
             console.error(player)

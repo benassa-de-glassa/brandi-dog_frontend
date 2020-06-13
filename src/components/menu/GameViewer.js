@@ -71,7 +71,7 @@ var GameViewer = function (props) {
                         <tr key={game.game_name} onClick={() => { setSelectRow(index); setError('') }}
                             className={(index === selectedRow ? "selected-row " : "") + (game.game_id === props.joinedGame ? 'joined-row' : "")}>
                             <td>{game.game_name}</td>
-                            <td>{game.host.name}</td>
+                            <td>{game.host.username}</td>
                             <td>
                                 { // reduce only works if game.players is not empty
                                 game.players && Object.values(game.players).map( 
@@ -87,7 +87,7 @@ var GameViewer = function (props) {
                     )}
                 </tbody>
             </table>
-            <span>
+            <span className='mt-1'>
                 <input type='button' className="mr-auto"
                     onClick={() => props.joinGame(gameList[selectedRow].game_id)}
                     value='Join' disabled={!props.playerLoggedIn || selectedRow === undefined || props.joinedGame} />

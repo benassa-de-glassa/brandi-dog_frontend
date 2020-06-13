@@ -12,7 +12,7 @@ class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            players: ['', '', '', ''],
+            players: [],
             allMarbles: [],
             activePlayerIndex: null,
             playerIsActive: false,
@@ -58,16 +58,6 @@ class Game extends Component {
         socket.off('player-state')
     }
 
-    // componentDidUpdate(prevProps) {
-    //     if (prevProps.gameID !== this.props.gameID) {
-    //         // change in game id means player has joined a new game
-    //         socket.emit('join-game', {
-    //             game_id: this.props.gameID,
-    //             player: this.props.player,
-    //         })
-    //     }
-    // }
-
     handleNewGameState(data) {
         if (data.round_state === 4) {
             this.setState({ cardSwapConfirmed: false })
@@ -92,14 +82,24 @@ class Game extends Component {
     }
 
     handleNewPlayerState(data) {
-        this.setState({ 
+        this.setState({
             cards: data.hand,
             marbles: data.marbles
         })
     }
 
-    async changeTeams() {
-
+    async changeTeams(successCallback, errorCallback) {
+        const relURL = 'games/' + this.props.gameID + '/teams'
+        const response = await postData(relURL,
+            this.props.player,
+        )
+        const responseJson = await response.json()
+        if (response.status === 200) {
+            successCallback()
+        } else {
+            errorCallback(responseJson.detail)
+            console.log(responseJson)
+        }
     }
 
     cardClicked(index) {
@@ -268,14 +268,16 @@ class Game extends Component {
         }
     }
 
-    async startGame() {
+    async startGame(successCallback, errorCallback) {
         const relURL = 'games/' + this.props.gameID + '/start'
         const response = await postData(relURL,
             this.props.player,
         )
         const responseJson = await response.json()
         if (response.status === 200) {
+            successCallback()
         } else {
+            errorCallback(responseJson.detail)
             console.log(responseJson)
         }
     }
@@ -297,6 +299,7 @@ class Game extends Component {
                 />
                 <div className="right-container">
                     <Controls
+                        players={this.state.players}
                         playerIsActive={this.state.playerIsActive}
                         gameState={this.state.gameState}
                         roundState={this.state.roundState}
