@@ -107,10 +107,6 @@ header {
     word-wrap: break-word;
 }
 
-.button:hover {
-    cursor: pointer;
-}
-
 .game-container {
     background: rgb(233, 233, 233);
     display: flex;
@@ -181,6 +177,13 @@ button {
 button:hover {
     border: 2px solid lightgrey;
 }
+
+.button:disabled {
+    cursor: default;
+    background-color: rgba(97, 124, 151, 0.479);
+    color: rgba(151, 167, 184, 0.555)
+}
+
 
 button.close {
     z-index: 1500;

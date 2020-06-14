@@ -3,6 +3,10 @@ import React, { useState } from 'react'
 import Hand from './Hand'
 import './controls.css'
 
+import { possibleActions } from '../../config'
+
+const cards = Object.keys(possibleActions)
+
 /*
 action_options values can be the following:
         0: get started
@@ -101,9 +105,9 @@ function Controls(props) {
 
             {props.selectedCard && props.selectedCard.value === 'Jo' && props.roundState !== 2 &&
                 // joker is selected, and it's not to be swapped at the beginning of a round
-                <select onChange={event => props.setJokerAction(event.target.value)}>
-                    {props.selectedCard.actions.map(action =>
-                        <option value={action}>{action}</option>
+                <select onChange={event => props.setJokerCard(event.target.value)}>
+                    {cards.map(card =>
+                        <option value={card}>{card}</option>
                     )}
                 </select>
             }

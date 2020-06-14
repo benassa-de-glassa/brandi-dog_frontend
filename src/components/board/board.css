@@ -15,16 +15,20 @@
     border: 1px solid grey;
     border-radius: 5px;
     padding: 4px;
+    padding-right: 30px;
 }
 
 .tooltip-text {
     font-size: small;
     margin: 0;
+    margin-left: 2px;
+    margin-bottom: 2px;
     padding: 0;
 }
 
 .movebutton {
     padding: 0;
+    margin: 1px 2px;
     width:100%;
     max-width: 30px;
     max-height: 30px;
