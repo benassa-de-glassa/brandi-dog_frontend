@@ -174,15 +174,21 @@ button {
     border-radius: 3px;
 }
 
-button:hover {
+button:hover:not(:disabled) {
     border: 2px solid lightgrey;
 }
 
-.button:disabled {
+button:disabled {
     cursor: default;
-    background-color: rgba(97, 124, 151, 0.479);
-    color: rgba(151, 167, 184, 0.555)
+    background-color:rgba(105, 90, 205, 0.425);
+    color: lightgrey;
 }
+
+
+/* 
+.button:disabled:hover {
+    border: 2px solid transparent;
+} */
 
 
 button.close {

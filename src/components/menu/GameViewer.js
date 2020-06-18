@@ -24,7 +24,7 @@ var GameViewer = function (props) {
 
     // let react control the input
     const handleCreateGameInput = event => setInput(event.target.value)
-    
+
     const handleCreateGameSubmit = async event => {
         event.preventDefault() // don't use the default submit
         var relURL = 'games'
@@ -54,7 +54,7 @@ var GameViewer = function (props) {
     return (
         <div id="game-viewer">
             <span className='subtitle mb-1'>Game List</span>
-            Click on a game to join, or create a new game. 
+            Click on a game to join, or create a new game.
             {error &&
                 <p className='error'>{error}</p>
             }
@@ -74,38 +74,42 @@ var GameViewer = function (props) {
                             <td>{game.host.username}</td>
                             <td>
                                 { // reduce only works if game.players is not empty
-                                game.players && Object.values(game.players).map( 
-                                    player => 
-                                        player.username === props.player.username 
-                                        ? <strong>{player.username}</strong> 
-                                        : player.username
-                                ).reduce((accu, elem) => {
-                                    return accu === null ? [elem] : [...accu, ', ', elem]
-                                }, null)}
+                                    game.players && Object.values(game.players).map(
+                                        player =>
+                                            player.username === props.player.username
+                                                ? <strong>{player.username}</strong>
+                                                : player.username
+                                    ).reduce((accu, elem) => {
+                                        return accu === null ? [elem] : [...accu, ', ', elem]
+                                    }, null)}
                             </td>
                         </tr>
                     )}
                 </tbody>
             </table>
             <span className='mt-1'>
-                <input type='button' className="mr-auto"
+                <button type='button' className='mr-1'
                     onClick={() => props.joinGame(gameList[selectedRow].game_id)}
-                    value='Join' disabled={!props.playerLoggedIn || selectedRow === undefined || props.joinedGame} />
-                <input type='button' className="mr-auto"
+                    disabled={!props.playerLoggedIn || selectedRow === undefined || props.joinedGame}
+                >Join</button>
+                <button type='button' className='mr-1 danger'
                     onClick={props.leaveGame}
-                    value='Leave' disabled={!props.joinedGame} />
-                <input type='button' className='mr-auto' onClick={updateGameList} value='Update' />
-                <input type='button' className='mr-auto' onClick={() => setCreateGame(true)} value='New Lobby' disabled={props.joinedGame || !props.playerLoggedIn} />
+                    disabled={!props.joinedGame}>Leave</button>
+                <button type='button' className='mr-1' onClick={updateGameList} >Update</button>
+                <button
+                    type='button' className='mr-1' onClick={() => setCreateGame(true)}
+                    disabled={props.joinedGame || !props.playerLoggedIn}
+                >New lobby</button>
             </span>
             {
                 createGame &&
-                <form className='ml-auto mr-2' onSubmit={handleCreateGameSubmit}>
+                <form className='mt-1 mr-2' onSubmit={handleCreateGameSubmit}>
                     <label className='mr-1'>
                         Enter a name: </label>
                     <input type='text' className='mr-1' value={input} onChange=
                         {handleCreateGameInput} placeholder='Enter game name' />
 
-                    <input type='submit' value='Create Game' />
+                    <button type='submit'>Create Game</button>
                 </form>
             }
 

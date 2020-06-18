@@ -95,7 +95,7 @@ class GlobalChat extends Component {
               placeholder={this.props.playerLoggedIn ? "Type your message here..." : "Log in to send message."}
               disabled={!this.props.playerLoggedIn}>
             </textarea>
-            <input type="button" onClick={this.handleClick} value="Send" disabled={!this.props.playerLoggedIn} />
+            <button onClick={this.handleClick} disabled={!this.props.playerLoggedIn}>Send</button>
           </form>
         </div>
       </div>

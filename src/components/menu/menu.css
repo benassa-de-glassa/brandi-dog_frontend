@@ -36,6 +36,7 @@
 }
 
 #global-chat-editor {
+    padding-bottom: 8px;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -68,7 +69,7 @@ thead {
     background-color: lightskyblue;
 }
 
-#game-list-table tbody tr:hover{
+#game-list-table tbody tr:hover:not(.joined-row){
     background-color: lightgrey;
 }
 
