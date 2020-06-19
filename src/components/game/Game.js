@@ -25,6 +25,7 @@ class Game extends Component {
             topCard: null,
 
             // updated by front-end
+            switchingSeats: false,
             selectedCardIndex: null,
             selectedAction: null,
             selectedMarble: null,
@@ -40,7 +41,8 @@ class Game extends Component {
         this.resetState = this.resetState.bind(this)
         this.handleNewGameState = this.handleNewGameState.bind(this)
         this.handleNewPlayerState = this.handleNewPlayerState.bind(this)
-        this.changeTeams = this.changeTeams.bind(this)
+        this.switchSeats = this.switchSeats.bind(this)
+        this.submitNewTeams = this.submitNewTeams.bind(this)
 
         this.startGame = this.startGame.bind(this)
         this.swapCard = this.swapCard.bind(this)
@@ -113,26 +115,31 @@ class Game extends Component {
         })
     }
 
-    async changeTeams(successCallback, errorCallback) {
+    switchSeats() {
+        // called by Controls component upon click
+        this.setState({ switchingSeats: true })
+    }
+
+    async submitNewTeams(newTeams) {
+        // called by Board component when another player's seat is clicked
         const relURL = 'games/' + this.props.gameID + '/teams'
         const response = await postData(relURL,
-            this.props.player,
+            newTeams
         )
         const responseJson = await response.json()
         if (response.status === 200) {
-            successCallback()
+            this.setState({ switchingSeats: false })
         } else {
-            errorCallback(responseJson.detail)
+            this.setState({ errorMessage: responseJson.detail })
             console.log(responseJson)
         }
     }
 
     cardClicked(index) {
-        console.log(this.state.cards[index].value + " clicked")
         // deselect selected step
         this.setState({ selectedMarble: null })
         if (index === this.state.selectedCardIndex) {
-            // if the selected card is clicked again
+            // deselect the card if it is clicked again
             this.setState({
                 selectedCardIndex: null,
                 marblesToSelect: 0,
@@ -247,10 +254,7 @@ class Game extends Component {
                     selectedMarble: marble
                 })
             }
-        } else {
-            // TODO
-            // maybe tooltip error
-        }
+        } 
     }
 
     tooltipClicked(action) {
@@ -353,6 +357,8 @@ class Game extends Component {
                     marbleClicked={this.marbleClicked}
                     selectedCard={this.state.cards[this.state.selectedCardIndex]}
                     topCard={this.state.topCard}
+                    switchingSeats={this.state.switchingSeats}
+                    submitNewTeams={this.submitNewTeams}
                 />
                 <div className="right-container">
                     <Controls
