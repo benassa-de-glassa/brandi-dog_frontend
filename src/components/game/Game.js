@@ -372,7 +372,9 @@ class Game extends Component {
                         fold={this.fold}
                         cardSwapConfirmed={this.state.cardSwapConfirmed}
                     />
-                    <Chat player={this.props.player} />
+                    <Chat 
+                        player={this.props.player}
+                        gameID={this.props.gameID} />
                 </div>
 
             </div>

@@ -26,7 +26,8 @@ class Chat extends Component {
     if (this.state.textValue.trim()) {
       socket.emit('chat_message', {
         sender: this.props.player.username,
-        text: this.state.textValue
+        text: this.state.textValue,
+        game_id: this.props.gameID
       })
     }
     this.setState({textValue: ''})
