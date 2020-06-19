@@ -74,8 +74,9 @@ class Chat extends Component {
               </div>
             )
           } else {
+            let messageClass = msg.sender === this.props.player.username ? 'message user' : 'message'
             return(
-              <div className="message" key={msg.time}>
+              <div className={messageClass} key={msg.time}>
                 <div className="message-text">
                   <p className="message-text"><span><strong>{msg.sender}</strong></span><span className="message-time float-right">{msg.time}</span></p>
                   <p className="message-text">{msg.text}</p>
@@ -95,7 +96,7 @@ class Chat extends Component {
               rows="2" 
               placeholder="Type your message here...">
             </textarea>
-            <button onClick={this.handleClick}>Send</button>
+            <button type='button' onClick={this.handleClick}>Send</button>
           </form>
         </div>
       </div>

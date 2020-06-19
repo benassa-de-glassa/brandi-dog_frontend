@@ -169,7 +169,7 @@ button {
     background-color: slateblue;
     cursor: pointer;
     box-sizing: border-box;
-    padding: 10px 20px;
+    padding: 6px 20px;
     border: 2px solid transparent;
     border-radius: 3px;
 }

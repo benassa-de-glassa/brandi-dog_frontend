@@ -23,7 +23,7 @@ class GlobalChat extends Component {
   }
 
   handleClick() {
-    socket.emit('chat_message', {
+    socket.emit('global_chat_message', {
       sender: this.props.player.username,
       text: this.state.textValue
     })
@@ -42,7 +42,7 @@ class GlobalChat extends Component {
   }
 
   componentDidMount() {
-    socket.on('chat_message', data => {
+    socket.on('global_chat_message', data => {
       console.log('received')
       this.addMessage(data)
     })
@@ -73,8 +73,9 @@ class GlobalChat extends Component {
                 </div>
               )
             } else {
+              let messageClass = msg.sender === this.props.player.username ? 'message user' : 'message'
               return (
-                <div className="message" key={msg.time}>
+                <div className={messageClass} key={msg.time}>
                   <div className="message-text">
                     <p className="message-text"><span><strong>{msg.sender}</strong></span><span className="float-right">{msg.time}</span></p>
                     <p className="message-text">{msg.text}</p>
@@ -95,7 +96,7 @@ class GlobalChat extends Component {
               placeholder={this.props.playerLoggedIn ? "Type your message here..." : "Log in to send message."}
               disabled={!this.props.playerLoggedIn}>
             </textarea>
-            <button onClick={this.handleClick} disabled={!this.props.playerLoggedIn}>Send</button>
+            <button type='button' onClick={this.handleClick} disabled={!this.props.playerLoggedIn}>Send</button>
           </form>
         </div>
       </div>

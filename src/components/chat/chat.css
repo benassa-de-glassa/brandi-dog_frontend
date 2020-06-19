@@ -27,9 +27,14 @@ div.message {
     border: 1px solid darksalmon;
 }
 
+.message.user {
+    background-color: rgb(204, 222, 247);
+    border: 1px solid lightsteelblue
+}
+
 div.server-message {
     background-color: rgb(252, 247, 227);
-    border: 1px solid lightblue;
+    border: 1px solid rgb(255, 255, 255);
 }
 
 .message-text {
