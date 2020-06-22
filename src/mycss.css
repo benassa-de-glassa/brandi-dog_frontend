@@ -56,13 +56,20 @@ header {
     padding: 20px;
 }
 
-.subtitle {
+.title {
     font-size: 18px;
     font-weight: 700;
+    margin-bottom: 10px;
+    margin-top: 0px;
+}
+
+.subtitle {
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .bold {
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .mr-auto {
@@ -192,6 +199,8 @@ button:disabled {
 
 
 button.close {
+    width: 28px;
+    height: 28px;
     z-index: 1500;
     color: grey;
     box-sizing: border-box;
@@ -212,6 +221,7 @@ button.close {
 button.close:hover {
     color: #000;
     cursor: pointer;
+    background-color: lightgrey;
 }
 
 button.danger {
@@ -222,4 +232,8 @@ button.danger {
 button.green {
     color: white;
     background-color: darkolivegreen
+}
+
+.white {
+    color: white;
 }

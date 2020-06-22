@@ -1,35 +1,42 @@
 .menu-container {
-    height: 500px;
     max-width: 1200px;
     position: relative;
-    display: flex;
     margin: 0 auto;
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 10px 4px;
     box-sizing: border-box;
     background: rgb(233, 233, 233);
     text-align: left;
 }
 
+#menu-flex-container {
+    height: 500px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
 #game-viewer {
     padding: 8px;
-    margin-right: 20px;
+    margin: 0px 8px;
     display: flex;
     flex-flow: column wrap;
     flex-grow: 1;
-    flex-basis: 50%;
+    flex-basis: 40%;
     box-sizing: border-box;
     background: white;
-    min-width: 300px;
+    min-width: 390px;
 }
 
 #global-chat-container {
+    height: 100%;
+    margin: 0px 8px;
     padding: 8px;
     position: relative;
     display: flex;
     flex-flow: column wrap;
     flex-grow: 1;
-    flex-basis: 50%;
+    flex-basis: 40%;
     box-sizing: border-box;
     background: white;
     min-width: 300px;
@@ -39,11 +46,11 @@
     padding-bottom: 8px;
     position: absolute;
     bottom: 0;
-    width: 100%;
+    width: calc(100% - 16px);
 }
 
 #global-message-box {
-    max-height: 70%;
+    max-height: calc(100% - 108px);
 }
 
 table {

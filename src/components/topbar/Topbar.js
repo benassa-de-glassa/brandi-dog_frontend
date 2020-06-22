@@ -5,9 +5,14 @@ import { Link, withRouter } from 'react-router-dom'
 function TopBar(props) {
     return (
         <header>
-            <svg className='ml-2' height="20" width="20">
-                <circle cx="10" cy="10" r="10" stroke="black" strokeWidth="2" fill={props.socketConnected ? "green" : "red"} />
+            <svg className='ml-2' height="20" width="20" title={props.socketConnected ? 'socket connection established' : 'socket connection failed'}>
+                <circle cx="10" cy="10" r="10" stroke="black" strokeWidth="2" 
+                    fill={props.socketConnected ? "green" : "red"}
+                />
             </svg>
+            { !props.socketConnected && props.playerLoggedIn &&
+                <input type='button' className='top-bar-link ml-2 white' value='Try to reconnect' />
+            }
             <span className='topbar'>
                 <Link
                     id='title'

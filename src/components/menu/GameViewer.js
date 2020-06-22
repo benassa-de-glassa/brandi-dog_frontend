@@ -54,7 +54,7 @@ var GameViewer = function (props) {
     return (
         <div id="game-viewer">
             <span className='subtitle mb-1'>Game List</span>
-            Click on a game to join, or create a new game.
+            <span className='mb-1'>Click on a game to join, or create a new game.</span>
             {error &&
                 <p className='error'>{error}</p>
             }

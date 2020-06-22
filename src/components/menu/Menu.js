@@ -8,6 +8,7 @@ import './menu.css'
 export default function Menu(props) {
     return (
         <div className='menu-container'>
+            <span className='title ml-1'>Menu</span>
             <button
                 id="close-tooltip"
                 type="button"
@@ -17,18 +18,20 @@ export default function Menu(props) {
             >
                 <span aria-hidden="true">&times;</span>
             </button>
-            <GameViewer
-                playerLoggedIn={props.playerLoggedIn}
-                player={props.player}
-                joinGame={props.joinGame}
-                joinedGame={props.joinedGame}
-                joinGameSocket={props.joinGameSocket}
-                leaveGame={props.leaveGame}
-            />
-            <GlobalChat
-                playerLoggedIn={props.playerLoggedIn}
-                player={props.player}
-            />
+            <div id='menu-flex-container'>
+                <GameViewer
+                    playerLoggedIn={props.playerLoggedIn}
+                    player={props.player}
+                    joinGame={props.joinGame}
+                    joinedGame={props.joinedGame}
+                    joinGameSocket={props.joinGameSocket}
+                    leaveGame={props.leaveGame}
+                />
+                <GlobalChat
+                    playerLoggedIn={props.playerLoggedIn}
+                    player={props.player}
+                />
+            </div>
         </div>
     )
 }
