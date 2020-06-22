@@ -92,7 +92,7 @@ function Board(props) {
 
     function playerBoxClicked(index) {
         // index is 0, 1, 2, or 3
-        if (this.props.switchingSeats) {
+        if (props.switchingSeats) {
             // enabled by clicking on 'switch seats' button in the Controls component
             let ownIndex = props.playerList.findIndex(props.player.uid)
             if (!(ownIndex === index)) {
