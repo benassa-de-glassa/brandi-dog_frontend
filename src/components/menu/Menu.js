@@ -8,7 +8,7 @@ import './menu.css'
 export default function Menu(props) {
     return (
         <div className='menu-container'>
-            <span className='title ml-1'>Menu</span>
+            <p className='title ml-1'>Menu</p>
             <button
                 id="close-tooltip"
                 type="button"
