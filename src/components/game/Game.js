@@ -234,13 +234,6 @@ class Game extends Component {
                         errorMessage: 'Choose one of your marbles, and one from another player.'
                     })
                 }
-            } else if (selectedCardValue === '7') {
-                // javascript does not have a range function lol?
-                let actions = [...Array(this.state.remainingStepsOf7).keys()].map(i => i + 1)
-                this.setState({
-                    tooltipActions: actions,
-                    selectedMarble: marble
-                })
             } else if (playableActions.length === 1) {
                 // clicked on a marble on the field while a card with only one 
                 // possible action

@@ -1,11 +1,10 @@
 import React from 'react'
 
-// const tooltipText = [
-//     {
-//         '4': 'move 4 forward',
-//         '-4': 'move 4 backward',
-//     }
-// ]
+/* 
+display the action modulo 70 because e.g. moving 3 after playing a 7 card
+is represented by the action '73' but the user should be able to click on '3' 
+instead of '73'. 
+*/
 
 function Tooltip(props) {
     return (
@@ -20,7 +19,9 @@ function Tooltip(props) {
             {props.tooltipActions.map(action =>
                 <button id={action} key={action} type="button" className='movebutton'
                     onClick={() => props.tooltipClicked(action)}>
-                    <span aria-hidden="true">{action}</span>
+                    <span aria-hidden="true">
+                        {action % 70 /* see comment above */}
+                    </span>
                 </button>
             )}
             <button
