@@ -30,10 +30,7 @@ var GameViewer = function (props) {
         var relURL = 'games'
         if (DEBUG) { relURL += '?debug=true' } // adds 3 filler players
 
-        const response = await postData(relURL, {
-            player: props.player,
-            game_name: input
-        })
+        const response = await postData(relURL, input)
         const responseJson = await response.json()
         if (response.status === 200) {
             props.joinGameSocket(responseJson.game_token)
