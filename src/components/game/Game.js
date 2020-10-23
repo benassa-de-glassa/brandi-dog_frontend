@@ -159,11 +159,7 @@ class Game extends Component {
         const selectedCard = this.state.cards[this.state.selectedCardIndex]
         console.debug('try to swap', selectedCard)
         const relURL = 'games/' + this.props.gameID + '/swap_cards '
-        const response = await postData(relURL,
-            {
-                player: this.props.player,
-                card: selectedCard
-            })
+        const response = await postData(relURL, {uid: selectedCard.uid} )
         const responseJson = await response.json()
         console.log(responseJson)
         if (response.status === 200) {
@@ -278,12 +274,14 @@ class Game extends Component {
         const relURL = 'games/' + this.props.gameID + '/action'
         const response = await postData(relURL,
             {
-                player: this.props.player,
-                action: {
-                    card: card,
-                    action: action,
-                    mid: marble.mid
-                }
+                card: {
+                    uid: card.uid,
+                    value: card.value,
+                    color: card.color,
+                    actions: card.actions
+                },
+                action: action,
+                mid: marble.mid
             })
         const responseJson = await response.json()
         if (response.status === 200) {
@@ -307,13 +305,15 @@ class Game extends Component {
         const relURL = 'games/' + this.props.gameID + '/action'
         const response = await postData(relURL,
             {
-                player: this.props.player,
-                action: {
-                    card: card,
-                    action: 'switch',
-                    mid: ownMarble.mid,
-                    mid_2: otherMarble.mid
-                }
+                card: {
+                    uid: card.uid,
+                    value: card.value,
+                    color: card.color,
+                    actions: card.actions
+                },
+                action: 'switch',
+                mid: ownMarble.mid,
+                mid_2: otherMarble.mid
             })
         const responseJson = await response.json()
         if (response.status === 200) {
