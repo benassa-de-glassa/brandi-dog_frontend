@@ -10,7 +10,6 @@ class GlobalChat extends Component {
       textValue: "",
       messages: [
         { sender: 'server', time: '', text: 'Welcome to Boomer Dog' },
-        { sender: 'bene', time: 'halb vier', text: 'geh mal bier holn' }
       ],
     }
     this.handleChange = this.handleChange.bind(this)
@@ -24,8 +23,8 @@ class GlobalChat extends Component {
   }
 
   handleClick() {
-    socket.emit('chat_message', {
-      sender: this.props.player.name,
+    socket.emit('global_chat_message', {
+      sender: this.props.player.username,
       text: this.state.textValue
     })
     this.setState({ textValue: '' })
@@ -43,7 +42,7 @@ class GlobalChat extends Component {
   }
 
   componentDidMount() {
-    socket.on('chat_message', data => {
+    socket.on('global_chat_message', data => {
       console.log('received')
       this.addMessage(data)
     })
@@ -59,7 +58,7 @@ class GlobalChat extends Component {
   render() {
     return (
       <div id='global-chat-container'>
-        <strong>Global chat</strong>
+        <span className='subtitle mb-1'>Global chat</span>
         <div id='global-message-box' className='message-box'>
           {this.state.messages.map(msg => {
             // color server messages differently
@@ -74,8 +73,9 @@ class GlobalChat extends Component {
                 </div>
               )
             } else {
+              let messageClass = msg.sender === this.props.player.username ? 'message user' : 'message'
               return (
-                <div className="message" key={msg.time}>
+                <div className={messageClass} key={msg.time}>
                   <div className="message-text">
                     <p className="message-text"><span><strong>{msg.sender}</strong></span><span className="float-right">{msg.time}</span></p>
                     <p className="message-text">{msg.text}</p>
@@ -96,7 +96,7 @@ class GlobalChat extends Component {
               placeholder={this.props.playerLoggedIn ? "Type your message here..." : "Log in to send message."}
               disabled={!this.props.playerLoggedIn}>
             </textarea>
-            <input type="button" onClick={this.handleClick} value="Send" disabled={!this.props.playerLoggedIn} />
+            <button type='button' onClick={this.handleClick} disabled={!this.props.playerLoggedIn}>Send</button>
           </form>
         </div>
       </div>

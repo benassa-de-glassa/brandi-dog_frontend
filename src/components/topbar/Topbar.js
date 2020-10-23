@@ -1,36 +1,52 @@
 import React, { Fragment } from 'react'
 
-import UserRegistration from './UserRegistration'
+import { Link, withRouter } from 'react-router-dom'
 
 function TopBar(props) {
-  var buttonValue = props.showMenu ? "Hide Menu" : "Show Menu"
+    return (
+        <header>
+            <svg className='ml-2' height="20" width="20" title={props.socketConnected ? 'socket connection established' : 'socket connection failed'}>
+                <circle cx="10" cy="10" r="10" stroke="black" strokeWidth="2" 
+                    fill={props.socketConnected ? "green" : "red"}
+                />
+            </svg>
+            { !props.socketConnected && props.playerLoggedIn &&
+                <input type='button' className='top-bar-link ml-2 white' value='Try to reconnect' />
+            }
+            <span className='topbar'>
+                <Link
+                    id='title'
+                    className='top-bar-link ml-2 mr-2'
+                    to='/'
+                >Boomer Dog{'\u2122'}
+                </Link>
 
-  return (
-      <div className="topbar">
-        <h1 className="ml-2 mr-2">Boomer Dog{'\u2122'}</h1>
-        
-        <svg height="40" width="40">
-          <circle cx="20" cy="20" r="10" stroke="black" strokeWidth="2" fill={props.socketConnected ? "green" : "red"} />
-        </svg>
+                <Link className="top-bar-link ml-2" to='/about'>About</Link>
 
+                {props.location.pathname === '/' 
+                    ?
+                    <input type="button" className="top-bar-link ml-2 mr-2" 
+                        value={props.showMenu ? 'Hide Menu' : 'Menu'} onClick={props.toggleMenu} />
+                    :
+                    <Link className="top-bar-link ml-2" to='/'>Home</Link>
+                }
 
-        <input type="button" className="top-bar-link" value={buttonValue} onClick={props.toggleMenu}/>
+                {props.playerLoggedIn
+                    ?
+                    <span className="ml-auto mr-2">
+                        Playing as  <span className='bold'>{props.player.username} (#{props.player.uid})</span>
 
-        { 
-          props.playerLoggedIn && 
-          <Fragment>
-          <span className="ml-auto mr-2">
-                  Playing as  <strong>{props.player.name} (#{props.player.uid})</strong>
-          </span>
-          <input type="button" className="top-bar-link mr-2" value="Quit" onClick={props.playerQuit}/>
-          </Fragment> 
-        }
-        { 
-          !props.playerLoggedIn && 
-          <UserRegistration registerPlayer={props.registerPlayer}/>
-        } 
-      </div>
-  )
+                        <input type="button" className="top-bar-link ml-2 mr-2 mt-1 mb-1" value="Logout" onClick={props.logout} />
+                    </span>
+                    :
+                    <Fragment>
+                        <Link className='top-bar-link mr-2 ml-auto' to='/users/login'>Login</Link>
+                        <Link className='top-bar-link mr-2' to='/users/create'>Create User</Link>
+                    </Fragment>
+                }
+            </span>
+        </header>
+    )
 }
-  
-export default TopBar;
+
+export default withRouter(TopBar);

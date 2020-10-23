@@ -1,25 +1,24 @@
 div.chatbox {
-    height: 50%;
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    margin: 10px;
-  }
+    display: flex;
+    flex-flow: column-reverse nowrap;
+    box-sizing: border-box;
+    flex-basis: 50%;
+    flex-grow: 1;
+    padding: 10px;
+}
 
 div.message-box {
+    background-color: white;;
+    max-height: 400px;
+    min-height: 250px;
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    max-height: 79%;
 }
 
 div.editor-box {
-    height: 20%;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    order: -1;
+    font-family: inherit;
 }
 
 div.message {
@@ -28,9 +27,14 @@ div.message {
     border: 1px solid darksalmon;
 }
 
+.message.user {
+    background-color: rgb(204, 222, 247);
+    border: 1px solid lightsteelblue
+}
+
 div.server-message {
     background-color: rgb(252, 247, 227);
-    border: 1px solid lightblue;
+    border: 1px solid rgb(255, 255, 255);
 }
 
 .message-text {
@@ -51,7 +55,7 @@ div.server-message {
 .text-box {
     font-size: 14px;
     box-sizing: border-box;
-    height: 60%;
+    height: 40px;
     width: 100%;
     resize: none;
 }

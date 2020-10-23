@@ -9,8 +9,7 @@ class Chat extends Component {
     this.state = {
       textValue: "",
       messages: [
-        {sender: 'server', time: 'now10', text: 'Welcome to Boomer Dog'},
-        {sender: 'bene', time: 'later3', text: 'geh mal bier holn'}
+        {sender: 'server', time: '', text: 'Welcome to Boomer Dog'},
       ],
     }
     this.handleChange = this.handleChange.bind(this)
@@ -24,14 +23,18 @@ class Chat extends Component {
   }
 
   handleClick() {
-    socket.emit('chat_message', {
-      sender: this.props.player.name,
-      text: this.state.textValue
-    })
+    if (this.state.textValue.trim()) {
+      socket.emit('chat_message', {
+        sender: this.props.player.username,
+        text: this.state.textValue,
+        game_id: this.props.gameID
+      })
+    }
     this.setState({textValue: ''})
   }
 
   onEnterKey(event) {
+    event.preventDefault()
     if (event.key === 'Enter' && event.shiftKey === false ) {
       this.handleClick()
     }
@@ -44,7 +47,6 @@ class Chat extends Component {
 
   componentDidMount() {
     socket.on('chat_message', data => {
-      console.log('received')
       this.addMessage(data)
     })
   }
@@ -73,8 +75,9 @@ class Chat extends Component {
               </div>
             )
           } else {
+            let messageClass = msg.sender === this.props.player.username ? 'message user' : 'message'
             return(
-              <div className="message" key={msg.time}>
+              <div className={messageClass} key={msg.time}>
                 <div className="message-text">
                   <p className="message-text"><span><strong>{msg.sender}</strong></span><span className="message-time float-right">{msg.time}</span></p>
                   <p className="message-text">{msg.text}</p>
@@ -94,7 +97,7 @@ class Chat extends Component {
               rows="2" 
               placeholder="Type your message here...">
             </textarea>
-            <input type="button" onClick={this.handleClick} value="Send" />
+            <button type='button' onClick={this.handleClick}>Send</button>
           </form>
         </div>
       </div>
