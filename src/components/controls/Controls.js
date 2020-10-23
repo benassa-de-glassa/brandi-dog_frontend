@@ -79,6 +79,7 @@ function Controls(props) {
     return (
         <div className="controls-box">
             <div className="instruction-box">
+                <p className='error'>{props.errorMessage}</p>
                 <span className='mb-1'>{roundStateText[props.roundState]}</span>
                 {props.players.length < 4 &&
                 <span>Waiting for players.</span>}
