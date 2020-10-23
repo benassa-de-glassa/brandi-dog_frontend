@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 
 import Hand from './Hand'
 import './controls.css'
@@ -55,6 +55,8 @@ const roundStateText = [
 
 function Controls(props) {
     var [error, setError] = useState('')
+    var [aboutToFold, setAboutToFold] = useState(false)
+
     // var selectedCardString, 
     var possibleMoveString
 
@@ -119,12 +121,25 @@ function Controls(props) {
                     Confirm
         </button>
             }
-            {props.playerIsActive && props.roundState === 4 &&
+            {props.playerIsActive && props.roundState === 4 && !aboutToFold &&
                 // allows the player to fold if it's his turn and the cards have been exchanged
                 <button className='button ml-1 danger'
-                    onClick={props.fold}>
+                    onClick={() => setAboutToFold(true)}>
                     Fold
+                </button>    
+            }
+            {props.playerIsActive && props.roundState === 4 && aboutToFold &&
+                // allows the player to fold if it's his turn and the cards have been exchanged
+                <Fragment>
+                <button className='button ml-1 danger'
+                    onClick={props.fold}>
+                    Confirm
                 </button>
+                <button className='button ml-1'
+                    onClick={()=> setAboutToFold(false)}>
+                    Cancel
+                </button> 
+                </Fragment>
             }
         </div>
     )
