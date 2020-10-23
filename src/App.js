@@ -153,7 +153,6 @@ playerQuit() {
 }
 
 async joinGame(gameID) {
-    console.warn('this happens too')
     const response = await postData(
         'games/' + gameID + '/join',
         this.state.player
