@@ -7,22 +7,28 @@ const color2unicode = {
   clubs: '\u2663'
 }
 
+
+
 function Hand(props) {
   return (
     <div className="hand">
-      {props.cards.map( (card, index) => 
-        <div 
-          key={card.uid} 
-          className={ (index === props.selectedCardIndex) ? "card card-selected" : "card" }
-          onClick={ () => props.cardClicked(index) }
+      {props.cards.map((card, index) =>
+        <div
+          key={card.uid}
+          className={(index === props.cardBeingSwapped && props.cardSwapConfirmed) 
+            ? "card card-highlighted" 
+            : (index === props.selectedCardIndex && !props.cardSwapConfirmed) 
+              ? "card card-selected"
+              : "card"
+            }
+          onClick={() => props.cardClicked(index)}
         >
           <span className="card-value">{card.value}</span>
           <span className='card-color'>{color2unicode[card.color]}</span>
         </div>
       )}
     </div>
-    )
+  )
 }
-  
+
 export default Hand;
-  

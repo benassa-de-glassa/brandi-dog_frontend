@@ -37,6 +37,11 @@
     z-index: 99;
 }
 
+.card-highlighted {
+    top: 25px;
+    background: lightgrey;
+}
+
 .card:hover {
     top: 10px;
     z-index: 100;

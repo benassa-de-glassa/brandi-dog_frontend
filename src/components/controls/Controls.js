@@ -104,6 +104,8 @@ function Controls(props) {
                 cards={props.cards}
                 cardClicked={props.cardClicked}
                 selectedCardIndex={props.selectedCardIndex}
+                cardBeingSwapped={props.cardBeingSwapped}
+                cardSwapConfirmed={props.cardSwapConfirmed}
             />
 
             {props.selectedCard && props.selectedCard.value === 'Jo' && props.roundState !== 2 &&

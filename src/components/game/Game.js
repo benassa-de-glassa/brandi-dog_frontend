@@ -32,6 +32,7 @@ class Game extends Component {
             tooltipActions: [],
             marbleToSwitch: null,
             cardSwapConfirmed: false,
+            cardBeingSwapped: 0,    // index of the card that is being swapped to highlight it
             jokerCard: 'A',         // default, selects which card is imitated by the joker
             remainingStepsOf7: 7,   // only allow choosing that many steps in the tooltip
 
@@ -160,14 +161,18 @@ class Game extends Component {
     }
 
     async swapCard() {
-        const selectedCard = this.state.cards[this.state.selectedCardIndex]
+        const index = this.state.selectedCardIndex
+        const selectedCard = this.state.cards[index]
         console.debug('try to swap', selectedCard)
         const relURL = 'games/' + this.props.gameID + '/swap_cards '
         const response = await postData(relURL, {uid: selectedCard.uid} )
         const responseJson = await response.json()
         console.log(responseJson)
         if (response.status === 200) {
-            this.setState({ cardSwapConfirmed: true })
+            this.setState({ 
+                cardSwapConfirmed: true,
+                cardBeingSwapped: index
+            })
         }
     }
 
@@ -376,6 +381,7 @@ class Game extends Component {
                         swapCard={this.swapCard}
                         fold={this.fold}
                         cardSwapConfirmed={this.state.cardSwapConfirmed}
+                        cardBeingSwapped={this.state.cardBeingSwapped}
                         errorMessage={this.state.errorMessage}
                     />
                     <Chat 
