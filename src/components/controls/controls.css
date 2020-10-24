@@ -37,6 +37,11 @@
     z-index: 99;
 }
 
+.card-highlighted {
+    top: 25px;
+    background: lightgrey;
+}
+
 .card:hover {
     top: 10px;
     z-index: 100;
@@ -60,3 +65,14 @@
     top: 45px;
     left: 25px;
 }
+
+#fold-buttons {
+    margin: 10px;
+    display: flex;
+    flex-flow: row-reverse nowrap;
+    align-items: center;
+}
+/* 
+#fold-confirmation {
+    
+} */

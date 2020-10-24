@@ -69,7 +69,10 @@ class App extends Component {
     }
 
     toggleMenu() {
-        this.setState({ showMenu: !this.state.showMenu })
+        this.setState({ 
+            showMenu: !this.state.showMenu,
+            errorMessage: ''
+        })
     }
 
     async getPlayer() {

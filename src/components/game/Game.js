@@ -32,6 +32,7 @@ class Game extends Component {
             tooltipActions: [],
             marbleToSwitch: null,
             cardSwapConfirmed: false,
+            cardBeingSwapped: 0,    // index of the card that is being swapped to highlight it
             jokerCard: 'A',         // default, selects which card is imitated by the joker
             remainingStepsOf7: 7,   // only allow choosing that many steps in the tooltip
 
@@ -137,8 +138,11 @@ class Game extends Component {
     }
 
     cardClicked(index) {
-        // deselect selected step
-        this.setState({ selectedMarble: null })
+        // deselect selected step & reset error message
+        this.setState({ 
+            selectedMarble: null,
+            errorMessage: ''
+        })
         if (index === this.state.selectedCardIndex) {
             // deselect the card if it is clicked again
             this.setState({
@@ -157,14 +161,18 @@ class Game extends Component {
     }
 
     async swapCard() {
-        const selectedCard = this.state.cards[this.state.selectedCardIndex]
+        const index = this.state.selectedCardIndex
+        const selectedCard = this.state.cards[index]
         console.debug('try to swap', selectedCard)
         const relURL = 'games/' + this.props.gameID + '/swap_cards '
         const response = await postData(relURL, {uid: selectedCard.uid} )
         const responseJson = await response.json()
         console.log(responseJson)
         if (response.status === 200) {
-            this.setState({ cardSwapConfirmed: true })
+            this.setState({ 
+                cardSwapConfirmed: true,
+                cardBeingSwapped: index
+            })
         }
     }
 
@@ -228,7 +236,8 @@ class Game extends Component {
                     console.debug('couldnt swap', marble, this.state.marbleToSwitch)
                     this.setState({
                         marbleToSwitch: null,
-                        errorMessage: 'Choose one of your marbles, and one from another player.'
+                        // the line below would otherwise take precedence over backend errors
+                        //errorMessage: 'Choose one of your marbles, and one from another player.'
                     })
                 }
             } else if (playableActions.length === 1) {
@@ -319,6 +328,7 @@ class Game extends Component {
         const responseJson = await response.json()
         if (response.status === 200) {
         } else {
+            this.setState({ errorMessage: responseJson.detail })
             console.log(responseJson)
         }
     }
@@ -371,6 +381,8 @@ class Game extends Component {
                         swapCard={this.swapCard}
                         fold={this.fold}
                         cardSwapConfirmed={this.state.cardSwapConfirmed}
+                        cardBeingSwapped={this.state.cardBeingSwapped}
+                        errorMessage={this.state.errorMessage}
                     />
                     <Chat 
                         player={this.props.player}
