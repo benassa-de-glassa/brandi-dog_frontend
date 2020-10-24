@@ -8,14 +8,13 @@ const color2unicode = {
 }
 
 
-
 function Hand(props) {
   return (
     <div className="hand">
       {props.cards.map((card, index) =>
         <div
           key={card.uid}
-          className={(index === props.cardBeingSwapped && props.cardSwapConfirmed) 
+          className={(index === props.cardBeingSwapped && props.cardSwapConfirmed && props.roundState === 2) 
             ? "card card-highlighted" 
             : (index === props.selectedCardIndex && !props.cardSwapConfirmed) 
               ? "card card-selected"

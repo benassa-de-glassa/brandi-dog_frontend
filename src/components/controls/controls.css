@@ -66,10 +66,13 @@
     left: 25px;
 }
 
-.logo-button {
-    font-size: 40px;
+#fold-buttons {
+    margin: 10px;
+    display: flex;
+    flex-flow: row-reverse nowrap;
+    align-items: center;
 }
-
-.logo-button:hover {
-    cursor: pointer
-}
+/* 
+#fold-confirmation {
+    
+} */

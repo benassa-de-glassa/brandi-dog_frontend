@@ -84,7 +84,7 @@ function Controls(props) {
                 <p className='error'>{props.errorMessage}</p>
                 <span className='mb-1'>{roundStateText[props.roundState]}</span>
                 {props.players.length < 4 &&
-                <span>Waiting for players.</span>}
+                    <span>Waiting for players.</span>}
                 {props.gameState < 2 && props.players.length === 4 &&
                     <div>
                         {error &&
@@ -101,6 +101,7 @@ function Controls(props) {
                 }
             </div>
             <Hand
+                roundState={props.roundState}
                 cards={props.cards}
                 cardClicked={props.cardClicked}
                 selectedCardIndex={props.selectedCardIndex}
@@ -121,28 +122,35 @@ function Controls(props) {
                     onClick={props.swapCard}
                     disabled={props.selectedCardIndex === null || props.cardSwapConfirmed}>
                     Confirm
-        </button>
-            }
-            {props.playerIsActive && props.roundState === 4 && !aboutToFold &&
-                // allows the player to fold if it's his turn and the cards have been exchanged
-                <button className='button ml-1 danger'
-                    onClick={() => setAboutToFold(true)}>
-                    Fold
-                </button>    
-            }
-            {props.playerIsActive && props.roundState === 4 && aboutToFold &&
-                // allows the player to fold if it's his turn and the cards have been exchanged
-                <Fragment>
-                <button className='button ml-1 danger'
-                    onClick={props.fold}>
-                    Confirm
                 </button>
-                <button className='button ml-1'
-                    onClick={()=> setAboutToFold(false)}>
-                    Cancel
-                </button> 
-                </Fragment>
             }
+            <div id="fold-buttons">
+                {props.playerIsActive && props.roundState === 4 && !aboutToFold &&
+                    // allows the player to fold if it's his turn and the cards have been exchanged
+                    <button className='button ml-1 danger'
+                        onClick={() => setAboutToFold(true)}>
+                        Fold
+                    </button>
+                }
+                {props.playerIsActive && props.roundState === 4 && aboutToFold &&
+                    // allows the player to fold if it's his turn and the cards have been exchanged
+                    <Fragment>
+                        <button className='button ml-1 danger'
+                            onClick={() => {
+                                props.fold()
+                                setAboutToFold(false)
+                            }}>
+                            Confirm
+                    </button>
+
+                        <button className='button ml-1'
+                            onClick={() => setAboutToFold(false)}>
+                            Cancel
+                    </button>
+                        <span id='fold-confirmation'>Do you really want to fold?</span>
+                    </Fragment>
+                }
+            </div>
         </div>
     )
 }
